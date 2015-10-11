@@ -20,6 +20,7 @@ public class PlayerInput : MonoBehaviour {
         bool startFire = (bool)Input.GetButtonDown("Fire1");
         bool stopFire = (bool)Input.GetButtonUp("Fire1");
         bool cancel = (bool)Input.GetButtonDown("Cancel");
+        bool boost = (bool)Input.GetButtonDown("Boost");
 
         if (startFire) {
             lockCursor();
@@ -29,7 +30,11 @@ public class PlayerInput : MonoBehaviour {
             unlockCursor();
         }
 
-        motor.Move(vmove, hlook, vlook, hmove);
+        if (boost) {
+            motor.Boost();
+        }
+
+        motor.SetMovement(vmove, hlook, vlook, hmove);
 
         if (startFire) {
             cannon.setFiring(true);
