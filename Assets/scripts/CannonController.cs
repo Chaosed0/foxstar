@@ -31,7 +31,6 @@ public class CannonController : MonoBehaviour {
                 Transform laser = Instantiate(laserPrefab, locations[i].position, locations[i].rotation) as Transform;
                 Rigidbody laserBody = laser.GetComponent<Rigidbody>();
                 laserBody.velocity = body.velocity + transform.forward.normalized * bulletSpeed;
-                laserBody.angularVelocity = body.angularVelocity;
                 foreach (MeshCollider collider in colliders) {
                     Physics.IgnoreCollision(laser.GetChild(0).GetComponent<Collider>(), collider);
                 }

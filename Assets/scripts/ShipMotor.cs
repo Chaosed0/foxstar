@@ -16,13 +16,13 @@ public class ShipMotor : MonoBehaviour {
     public float maxVelocity = 100.0f;
     public float boostCooldownTime = 15.0f;
     public float boostTime = 1.0f;
+    public float maxRollAngle = 40.0f;
 
     private float boostCooldownTimer = 15.0f;
     private float boostTimer = 2.0f;
 
     private float thrust = 0.0f;
     private float pitch = 0.0f;
-    private float yaw = 0.0f;
     private float roll = 0.0f;
 
     private float dragCoefficient = 0.2f;
@@ -63,17 +63,19 @@ public class ShipMotor : MonoBehaviour {
             body.AddForce(transform.forward * thrust * thrustForce);
         }
 
-        if (Mathf.Abs(yaw) > Util.Epsilon) {
-            body.AddTorque(transform.up * yaw * yawForce / torqueDamper);
-        }
-
         if (Mathf.Abs(pitch) > Util.Epsilon) {
             body.AddTorque(transform.right * pitch * pitchForce / torqueDamper);
         }
 
+        /* Limit the roll angle */
         if (Mathf.Abs(roll) > Util.Epsilon) {
             body.AddTorque(transform.forward * -roll * rollForce / torqueDamper);
         }
+
+        /* Add yaw if we are rolled at all */
+        Vector3 xcomp = Vector3.ProjectOnPlane(transform.up, Vector3.up);
+        float yaw = xcomp.magnitude * Mathf.Sign(Util.angleTo(xcomp, Vector3.up, transform.forward));
+        body.AddTorque(Vector3.up * yaw * yawForce / torqueDamper);
 
         if (IsBoosting()) {
             body.AddForce(transform.forward * boostForce);
@@ -111,8 +113,6 @@ public class ShipMotor : MonoBehaviour {
                 OnBoostAvailable();
             }
         }
-
-        Debug.Log(speed);
     }
 
     public void Boost() {
@@ -129,10 +129,13 @@ public class ShipMotor : MonoBehaviour {
         }
     }
 
-    public void SetMovement(float thrust, float yaw, float pitch, float roll) {
+    public float GetCurrentThrust() {
+        return thrust;
+    }
+
+    public void SetMovement(float thrust, float pitch, float roll) {
         this.thrust = thrust;
-        this.yaw = yaw;
-        this.pitch = pitch;
         this.roll = roll;
+        this.pitch = pitch;
     }
 }
