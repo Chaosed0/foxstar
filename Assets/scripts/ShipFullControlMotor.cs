@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ShipMotor : MonoBehaviour {
+public class ShipFullControlMotor : MonoBehaviour {
     private Rigidbody body;
 
     // These defaults should be somewhat reasonable for a mass of 100
-    public float thrustForce = 2000.0f;
+    public float thrustForce = 1.0f;
     public float boostForce = 5000.0f;
     public float yawForce = 2000.0f;
     public float pitchForce = 2000.0f;
@@ -17,6 +17,7 @@ public class ShipMotor : MonoBehaviour {
     public float boostCooldownTime = 15.0f;
     public float boostTime = 1.0f;
 
+    private bool limitVelocity = true;
     private float boostCooldownTimer = 15.0f;
     private float boostTimer = 2.0f;
 
@@ -24,8 +25,6 @@ public class ShipMotor : MonoBehaviour {
     private float pitch = 0.0f;
     private float yaw = 0.0f;
     private float roll = 0.0f;
-
-    private float dragCoefficient = 0.2f;
 
     public delegate void StartBoost();
     public event StartBoost OnStartBoost;
@@ -46,8 +45,6 @@ public class ShipMotor : MonoBehaviour {
         body.maxAngularVelocity = 2.0f;
         boostCooldownTimer = boostCooldownTime;
         boostTimer = boostTime;
-
-        dragCoefficient = thrustForce/(maxVelocity*maxVelocity);
 	}
 
     public bool IsBoosting() {
@@ -94,12 +91,15 @@ public class ShipMotor : MonoBehaviour {
             body.AddTorque(torqueVector * speed * speed * stabilityFactor);
         }
 
-        /* Apply a drag force */
-        body.AddForce(- dragCoefficient * speed * speed * transform.forward);
+        /* Limit velocity if we need to */
+        if (limitVelocity && body.velocity.magnitude > maxVelocity) {
+            body.velocity = body.velocity.normalized * (maxVelocity + (body.velocity.magnitude - maxVelocity) / 1.1f);
+        }
 
         if (boostTimer < boostTime) {
             boostTimer += Time.deltaTime;
         } else {
+            limitVelocity = true;
             if (OnStopBoost != null) {
                 OnStopBoost();
             }
@@ -111,12 +111,11 @@ public class ShipMotor : MonoBehaviour {
                 OnBoostAvailable();
             }
         }
-
-        Debug.Log(speed);
     }
 
     public void Boost() {
         if (boostCooldownTimer >= boostCooldownTime) {
+            limitVelocity = false;
             boostTimer = 0.0f;
             boostCooldownTimer = 0.0f;
             if (OnStartBoost != null) {

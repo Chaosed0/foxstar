@@ -1,0 +1,785 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Input defaultConfiguration="Windows_X360_Input">
+  <InputConfiguration name="Windows_X360_Input">
+    <AxisConfiguration name="kThrottleForward">
+      <description />
+      <positive>W</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>3</gravity>
+      <sensitivity>3</sensitivity>
+      <snap>true</snap>
+      <invert>false</invert>
+      <type>DigitalAxis</type>
+      <axis>0</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j1ThrottleForward">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.3</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>AnalogAxis</type>
+      <axis>9</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j2ThrottleForward">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.3</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>AnalogAxis</type>
+      <axis>9</axis>
+      <joystick>1</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j3ThrottleForward">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.3</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>AnalogAxis</type>
+      <axis>9</axis>
+      <joystick>2</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j4ThrottleForward">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.3</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>AnalogAxis</type>
+      <axis>9</axis>
+      <joystick>3</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="kThrottleBackward">
+      <description />
+      <positive>S</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>3</gravity>
+      <sensitivity>3</sensitivity>
+      <snap>true</snap>
+      <invert>false</invert>
+      <type>DigitalAxis</type>
+      <axis>0</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j1ThrottleBackward">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.2</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>AnalogAxis</type>
+      <axis>8</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j2ThrottleBackward">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.2</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>AnalogAxis</type>
+      <axis>8</axis>
+      <joystick>1</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j3ThrottleBackward">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.2</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>AnalogAxis</type>
+      <axis>8</axis>
+      <joystick>2</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j4ThrottleBackward">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.2</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>AnalogAxis</type>
+      <axis>8</axis>
+      <joystick>3</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="kYaw">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>3</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>MouseAxis</type>
+      <axis>0</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j1Yaw">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.2</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>AnalogAxis</type>
+      <axis>0</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j2Yaw">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.2</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>AnalogAxis</type>
+      <axis>0</axis>
+      <joystick>1</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j3Yaw">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.2</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>AnalogAxis</type>
+      <axis>0</axis>
+      <joystick>2</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j4Yaw">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.2</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>AnalogAxis</type>
+      <axis>0</axis>
+      <joystick>3</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="kPitch">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>3</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>MouseAxis</type>
+      <axis>1</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="kAltPitch">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>3</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>Button</type>
+      <axis>0</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j1Pitch">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.2</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>true</invert>
+      <type>AnalogAxis</type>
+      <axis>4</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j1AltPitch">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.2</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>AnalogAxis</type>
+      <axis>0</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j2Pitch">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.2</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>true</invert>
+      <type>AnalogAxis</type>
+      <axis>4</axis>
+      <joystick>1</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j2AltPitch">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.2</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>AnalogAxis</type>
+      <axis>0</axis>
+      <joystick>1</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j3Pitch">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.2</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>true</invert>
+      <type>AnalogAxis</type>
+      <axis>4</axis>
+      <joystick>2</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j3AltPitch">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.2</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>AnalogAxis</type>
+      <axis>0</axis>
+      <joystick>2</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j4Pitch">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.2</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>true</invert>
+      <type>AnalogAxis</type>
+      <axis>4</axis>
+      <joystick>3</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j4AltPitch">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.2</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>AnalogAxis</type>
+      <axis>0</axis>
+      <joystick>3</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="kRoll">
+      <description />
+      <positive>D</positive>
+      <altPositive>None</altPositive>
+      <negative>A</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>3</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>DigitalAxis</type>
+      <axis>0</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j1Roll">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.2</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>AnalogAxis</type>
+      <axis>3</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j2Roll">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.2</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>AnalogAxis</type>
+      <axis>3</axis>
+      <joystick>1</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j3Roll">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.2</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>AnalogAxis</type>
+      <axis>3</axis>
+      <joystick>2</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j4Roll">
+      <description />
+      <positive>None</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0.2</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>1</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>AnalogAxis</type>
+      <axis>3</axis>
+      <joystick>3</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="kMenuHorizontal">
+      <description />
+      <positive>D</positive>
+      <altPositive>RightArrow</altPositive>
+      <negative>A</negative>
+      <altNegative>LeftArrow</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>3</gravity>
+      <sensitivity>3</sensitivity>
+      <snap>true</snap>
+      <invert>false</invert>
+      <type>DigitalAxis</type>
+      <axis>0</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="kMenuVertical">
+      <description />
+      <positive>W</positive>
+      <altPositive>UpArrow</altPositive>
+      <negative>S</negative>
+      <altNegative>DownArrow</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>3</gravity>
+      <sensitivity>3</sensitivity>
+      <snap>true</snap>
+      <invert>false</invert>
+      <type>DigitalAxis</type>
+      <axis>0</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="kBoost">
+      <description />
+      <positive>Space</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>0</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>DigitalAxis</type>
+      <axis>0</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j1Boost">
+      <description />
+      <positive>Joystick1Button5</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>0</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>Button</type>
+      <axis>0</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j2Boost">
+      <description />
+      <positive>Joystick2Button5</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>0</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>Button</type>
+      <axis>0</axis>
+      <joystick>1</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j3Boost">
+      <description />
+      <positive>Joystick3Button5</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>0</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>Button</type>
+      <axis>0</axis>
+      <joystick>2</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j4Boost">
+      <description />
+      <positive>Joystick4Button5</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>0</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>Button</type>
+      <axis>0</axis>
+      <joystick>3</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="kSubmit">
+      <description />
+      <positive>Space</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>0</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>Button</type>
+      <axis>0</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j1Submit">
+      <description />
+      <positive>Joystick1Button0</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>0</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>Button</type>
+      <axis>0</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j2Submit">
+      <description />
+      <positive>Joystick2Button0</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>0</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>Button</type>
+      <axis>0</axis>
+      <joystick>1</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j3Submit">
+      <description />
+      <positive>Joystick3Button0</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>0</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>Button</type>
+      <axis>0</axis>
+      <joystick>2</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j4Submit">
+      <description />
+      <positive>Joystick4Button0</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>0</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>Button</type>
+      <axis>0</axis>
+      <joystick>3</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="kCancel">
+      <description />
+      <positive>Escape</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>0</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>Button</type>
+      <axis>0</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j1Cancel">
+      <description />
+      <positive>Joystick1Button7</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>0</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>Button</type>
+      <axis>0</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j2Cancel">
+      <description />
+      <positive>Joystick2Button7</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>0</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>Button</type>
+      <axis>0</axis>
+      <joystick>1</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j3Cancel">
+      <description />
+      <positive>Joystick3Button7</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>0</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>Button</type>
+      <axis>0</axis>
+      <joystick>2</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j4Cancel">
+      <description />
+      <positive>Joystick4Button7</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>0</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>Button</type>
+      <axis>0</axis>
+      <joystick>3</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="kFire">
+      <description />
+      <positive>Mouse0</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>0</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>Button</type>
+      <axis>0</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j1Fire">
+      <description />
+      <positive>Joystick1Button4</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>0</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>Button</type>
+      <axis>0</axis>
+      <joystick>0</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j2Fire">
+      <description />
+      <positive>Joystick2Button4</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>0</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>Button</type>
+      <axis>0</axis>
+      <joystick>1</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j3Fire">
+      <description />
+      <positive>Joystick3Button4</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>0</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>Button</type>
+      <axis>0</axis>
+      <joystick>2</joystick>
+    </AxisConfiguration>
+    <AxisConfiguration name="j4Fire">
+      <description />
+      <positive>Joystick4Button5</positive>
+      <altPositive>None</altPositive>
+      <negative>None</negative>
+      <altNegative>None</altNegative>
+      <deadZone>0</deadZone>
+      <gravity>0</gravity>
+      <sensitivity>0</sensitivity>
+      <snap>false</snap>
+      <invert>false</invert>
+      <type>Button</type>
+      <axis>0</axis>
+      <joystick>3</joystick>
+    </AxisConfiguration>
+  </InputConfiguration>
+</Input>
