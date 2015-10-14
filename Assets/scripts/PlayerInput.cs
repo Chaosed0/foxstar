@@ -18,8 +18,7 @@ public class PlayerInput : MonoBehaviour {
         float throttle = InputManager.GetAxis(controllerPrefix + "ThrottleForward");
         float reverse = InputManager.GetAxis(controllerPrefix + "ThrottleBackward");
         float pitch = InputManager.GetAxis(controllerPrefix + "Pitch");
-        float roll = InputManager.GetAxis(controllerPrefix + "Yaw");
-        //float roll = InputManager.GetAxis(controllerPrefix + "Roll");
+        float roll = InputManager.GetAxis(controllerPrefix + "Roll");
         bool startFire = (bool)InputManager.GetButtonDown(controllerPrefix + "Fire");
         bool stopFire = (bool)InputManager.GetButtonUp(controllerPrefix + "Fire");
         bool cancel = (bool)InputManager.GetButtonDown(controllerPrefix + "Cancel");
