@@ -11,11 +11,11 @@ public class CannonController : MonoBehaviour {
     private float cooldownTimer = 0.2f;
     private bool firing = false;
     private Collider[] colliders;
-    private Rigidbody body;
+    private ShipMotor motor;
 
     void Start() {
         colliders = player.GetComponents<MeshCollider>();
-        body = GetComponent<Rigidbody>();
+        motor = GetComponent<ShipMotor>();
     }
 
     public void setFiring(bool firing) {
@@ -30,7 +30,7 @@ public class CannonController : MonoBehaviour {
             for (int i = 0; i < locations.Length; i++) {
                 Transform laser = Instantiate(laserPrefab, locations[i].position, locations[i].rotation) as Transform;
                 Rigidbody laserBody = laser.GetComponent<Rigidbody>();
-                laserBody.velocity = body.velocity + transform.forward.normalized * bulletSpeed;
+                laserBody.velocity = transform.forward * motor.getCurrentSpeed() + transform.forward.normalized * bulletSpeed;
                 foreach (MeshCollider collider in colliders) {
                     Physics.IgnoreCollision(laser.GetChild(0).GetComponent<Collider>(), collider);
                 }

@@ -4,16 +4,17 @@ using System.Collections;
 public class ShipMotor : MonoBehaviour {
     private Rigidbody body;
 
-    // These defaults should be somewhat reasonable for a mass of 100
-    public float thrustForce = 2000.0f;
-    public float boostForce = 5000.0f;
-    public float yawForce = 2000.0f;
-    public float pitchForce = 2000.0f;
-    public float rollForce = 2000.0f;
-    public float sideDampForce = 100.0f;
-    public float stability = 1.0f;
-    public float stabilityFactor = 1.0f;
-    public float maxVelocity = 100.0f;
+    public float acceleration = 10.0f;
+    public float boostAcceleration = 30.0f;
+    public float maxSpeed = 100.0f;
+
+    public float pitchAccel = 10.0f;
+    public float rollAccel = 10.0f;
+    public float yawAccel = 10.0f;
+    public float maxPitchSpeed = 200.0f;
+    public float maxRollSpeed = 300.0f;
+    public float maxYawSpeed = 50.0f;
+
     public float boostCooldownTime = 15.0f;
     public float boostTime = 1.0f;
     public float maxRollAngle = 40.0f;
@@ -25,7 +26,11 @@ public class ShipMotor : MonoBehaviour {
     private float pitch = 0.0f;
     private float roll = 0.0f;
 
+    private Vector3 rotSpeed = Vector3.zero;
+    private Vector3 rotation = Vector3.zero;
+
     private float dragCoefficient = 0.2f;
+    private float speed = 0.0f;
 
     public delegate void StartBoost();
     public event StartBoost OnStartBoost;
@@ -47,7 +52,7 @@ public class ShipMotor : MonoBehaviour {
         boostCooldownTimer = boostCooldownTime;
         boostTimer = boostTime;
 
-        dragCoefficient = thrustForce/(maxVelocity*maxVelocity);
+        dragCoefficient = acceleration/(maxSpeed*maxSpeed);
 	}
 
     public bool IsBoosting() {
@@ -55,49 +60,40 @@ public class ShipMotor : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        float speed = body.velocity.magnitude;
-        /* Make it harder to turn when at higher velocities */
-        float torqueDamper = 1.0f + speed / maxVelocity;
-
-        if (Mathf.Abs(thrust) > Util.Epsilon && !IsBoosting()) {
-            body.AddForce(transform.forward * thrust * thrustForce);
+        if (IsBoosting()) {
+            speed += boostAcceleration * Time.deltaTime;
+        } else if (Mathf.Abs(thrust) > Util.Epsilon) {
+            speed += acceleration * thrust * Time.deltaTime;
         }
 
         if (Mathf.Abs(pitch) > Util.Epsilon) {
-            body.AddTorque(transform.right * pitch * pitchForce / torqueDamper);
+            rotSpeed.x += pitchAccel * pitch * Time.deltaTime;
         }
 
-        /* Limit the roll angle */
         if (Mathf.Abs(roll) > Util.Epsilon) {
-            body.AddTorque(transform.forward * -roll * rollForce / torqueDamper);
+            rotSpeed.z += rollAccel * (-roll) * Time.deltaTime;
         }
 
-        /* Add yaw if we are rolled at all */
-        Vector3 xcomp = Vector3.ProjectOnPlane(transform.up, Vector3.up);
-        float yaw = xcomp.magnitude * Mathf.Sign(Util.angleTo(xcomp, Vector3.up, transform.forward));
-        body.AddTorque(Vector3.up * yaw * yawForce / torqueDamper);
+        rotSpeed.y -= rotation.z / maxRollAngle * yawAccel * Time.deltaTime;
 
-        if (IsBoosting()) {
-            body.AddForce(transform.forward * boostForce);
-        }
+        float drag = dragCoefficient * speed * speed;
+        speed -= drag * Time.deltaTime;
 
-        if (Mathf.Abs(speed) > Util.Epsilon) {
-            /* Dampen non-forward/backward velocity */
-            Vector3 vel = body.velocity;
-            Vector3 sideDir = Vector3.ProjectOnPlane(vel, transform.forward).normalized;
-            body.AddForce(-sideDir * sideDampForce);
+        Vector3 angularDrag = new Vector3(
+                    rotSpeed.x/8.0f,
+                    rotSpeed.y/8.0f,
+                    rotSpeed.z/8.0f
+                );
+        rotSpeed -= angularDrag;
 
-            /* Stabilize up vector */
-            Vector3 predictedUp = Quaternion.AngleAxis(
-                    body.angularVelocity.magnitude * stability / speed,
-                    body.angularVelocity) * transform.up;
-            Vector3 torqueVector = Vector3.Cross(predictedUp, Vector3.up);
-            torqueVector = Vector3.Project(torqueVector, transform.forward);
-            body.AddTorque(torqueVector * speed * speed * stabilityFactor);
-        }
+        rotation += rotSpeed;
+        rotation.x = rotation.x % 360;
+        rotation.y = rotation.y % 360;
+        rotation.z = Mathf.Clamp(rotation.z, -maxRollAngle, maxRollAngle);
 
-        /* Apply a drag force */
-        body.AddForce(- dragCoefficient * speed * speed * transform.forward);
+        //body.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);
+        body.velocity = transform.forward * speed;
+        body.MoveRotation(Quaternion.Euler(rotation));
 
         if (boostTimer < boostTime) {
             boostTimer += Time.deltaTime;
@@ -137,5 +133,9 @@ public class ShipMotor : MonoBehaviour {
         this.thrust = thrust;
         this.roll = roll;
         this.pitch = pitch;
+    }
+
+    public float getCurrentSpeed() {
+        return speed;
     }
 }

@@ -69,7 +69,7 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
         for (int i = 0; i < playerNum; i++) {
             PlayerInput input = inputs[i];
             input.enabled = true;
-            input.GetComponent<ShipMotor>().Boost();
+            //input.GetComponent<ShipMotor>().Boost();
         }
 
         hideOnReady.alpha = 0.0f;
