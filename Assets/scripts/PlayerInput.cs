@@ -36,6 +36,10 @@ public class PlayerInput : MonoBehaviour {
             motor.Boost();
         }
 
+        throttle = Mathf.Clamp(throttle, -1.0f, 1.0f);
+        reverse = Mathf.Clamp(reverse, -1.0f, 1.0f);
+        pitch = Mathf.Clamp(pitch, -1.0f, 1.0f);
+        roll = Mathf.Clamp(roll, -1.0f, 1.0f);
         motor.SetMovement(throttle - reverse, pitch, roll);
 
         if (startFire) {

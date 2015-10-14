@@ -26,7 +26,6 @@ public class ShipParticleController : MonoBehaviour {
     }
 
 	void Update () {
-        float maxShipSpeed = motor.maxVelocity;
         float lerp = (motor.GetCurrentThrust() + 1.0f) / 2.0f;
         if (motor.IsBoosting()) {
             lerp = 2.0f;
