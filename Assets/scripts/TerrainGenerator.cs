@@ -19,6 +19,8 @@ public class TerrainGenerator : MonoBehaviour {
     public float xPerturb = 0.2f;
     public float yPerturb = 0.2f;
 
+    private Vector3[,] sharedVertices;
+
     /*private Texture2D noiseTex;
     private Color[][] octavePixels;*/
 
@@ -34,8 +36,26 @@ public class TerrainGenerator : MonoBehaviour {
     }
 
 	void Start () {
-        Vector3[,] sharedVertices = new Vector3[xsize,ysize];
+        Generate();
+    }
+
+    /* Returns a rough approximation of the height at a given point in worldspace */
+    public float GetElevation(float x, float y) {
+        if (x < -xsize/2.0f * xscale || x > xsize/2.0f * xscale ||
+                y < -ysize/2.0f * yscale || y > ysize/2.0f * yscale) {
+            Debug.Log("Worldspace " + x + "," + y + " out of terrain bounds");
+            return 0.0f;
+        }
+
+        int localX = (int)(x/xscale + xsize/2.0f);
+        int localY = (int)(y/yscale + ysize/2.0f);
+        Debug.Log(x + " " + y + " " + localX + " " + localY);
+        return sharedVertices[localY,localX].y;
+    }
+
+    public void Generate() {
         float[] seed = new float[octaves];
+        sharedVertices = new Vector3[xsize,ysize];
 
         //octavePixels = new Color[octaves+1][];
         for (int i = 0; i < octaves; i++) {

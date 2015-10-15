@@ -1,12 +1,15 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class MultiPlayerJoinHandler: MonoBehaviour {
     public Camera initialCamera;
+    public TerrainGenerator terrain;
+    public CanvasGroup hideOnReady;
 
     public Transform shipPrefab;
     public Transform cameraPrefab;
-    public CanvasGroup hideOnReady;
+    public Canvas HUDPrefab;
 
     private int playerNum = 0;
     private int maxPlayers = 4;
@@ -31,9 +34,11 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
     void OnPlayerJoined(string playerPrefix) {
         /* Create a camera and a ship for this player */
         Vector3 position = initialShipPositions[playerNum];
+        position.y = terrain.GetElevation(position.x, position.z) + 30.0f;
+        Debug.Log(position);
         Quaternion rotation = Quaternion.LookRotation(-position, Vector3.up);
         Transform ship = Instantiate(shipPrefab, position, rotation) as Transform;
-        Vector3 cameraPosition = position + new Vector3(Mathf.Sign(position.x) * 20.0f, 0.0f, Mathf.Sign(position.z) * 20.0f);
+        Vector3 cameraPosition = position - new Vector3(Mathf.Sign(position.x) * 20.0f, 0.0f, Mathf.Sign(position.z) * 20.0f);
         Transform camera = Instantiate(cameraPrefab, cameraPosition, rotation) as Transform;
 
         CameraFollow follower = camera.GetComponent<CameraFollow>();
@@ -62,6 +67,11 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
             topRightView.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
             botRightView.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
         }
+
+        Canvas HUD = Instantiate(HUDPrefab, Vector3.zero, Quaternion.identity) as Canvas;
+        HUD.worldCamera = cam;
+        HUD.transform.Find("HealthSlider").GetComponent<HealthSlider>().ship = ship.GetComponent<Ship>();
+
         playerNum++;
     }
 
