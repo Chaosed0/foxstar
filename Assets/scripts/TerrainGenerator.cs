@@ -49,7 +49,6 @@ public class TerrainGenerator : MonoBehaviour {
 
         int localX = (int)(x/xscale + xsize/2.0f);
         int localY = (int)(y/yscale + ysize/2.0f);
-        Debug.Log(x + " " + y + " " + localX + " " + localY);
         return sharedVertices[localY,localX].y;
     }
 

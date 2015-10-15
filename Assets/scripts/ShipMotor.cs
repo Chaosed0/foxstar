@@ -17,7 +17,8 @@ public class ShipMotor : MonoBehaviour {
 
     public float boostCooldownTime = 15.0f;
     public float boostTime = 1.0f;
-    public float maxRollAngle = 40.0f;
+    public float maxPitchAngle = 80.0f;
+    public float maxRollAngle = 80.0f;
 
     private float boostCooldownTimer = 15.0f;
     private float boostTimer = 2.0f;
@@ -87,11 +88,13 @@ public class ShipMotor : MonoBehaviour {
         rotSpeed -= angularDrag;
 
         rotation += rotSpeed;
-        rotation.x = rotation.x % 360;
+        rotation.x = Mathf.Clamp(rotation.x, -maxPitchAngle, maxPitchAngle);
         rotation.y = rotation.y % 360;
         rotation.z = Mathf.Clamp(rotation.z, -maxRollAngle, maxRollAngle);
 
-        //body.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);
+        /* Don't allow backing up */
+        speed = Mathf.Max(0.0f, speed);
+
         body.velocity = transform.forward * speed;
         body.MoveRotation(Quaternion.Euler(rotation));
 
@@ -137,5 +140,9 @@ public class ShipMotor : MonoBehaviour {
 
     public float getCurrentSpeed() {
         return speed;
+    }
+
+    public Vector3 getCurrentRotation() {
+        return rotation;
     }
 }
