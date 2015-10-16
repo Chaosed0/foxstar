@@ -47,13 +47,14 @@ public class ShipMotor : MonoBehaviour {
 
 	void Start () {
         body = GetComponent<Rigidbody>();
-        body.centerOfMass = new Vector3(0,0,0);
 
-        body.maxAngularVelocity = 2.0f;
         boostCooldownTimer = boostCooldownTime;
         boostTimer = boostTime;
 
         dragCoefficient = acceleration/(maxSpeed*maxSpeed);
+
+        /* Inherit instantiated rotation */
+        rotation = this.transform.eulerAngles;
 	}
 
     public bool IsBoosting() {

@@ -34,10 +34,10 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
     void OnPlayerJoined(string playerPrefix) {
         /* Create a camera and a ship for this player */
         Vector3 position = initialShipPositions[playerNum];
-        position.y = terrain.GetElevation(position.x, position.z) + 30.0f;
-        Quaternion rotation = Quaternion.LookRotation(-position, Vector3.up);
-        Transform ship = Instantiate(shipPrefab, position, rotation) as Transform;
-        Vector3 cameraPosition = position - new Vector3(Mathf.Sign(position.x) * 20.0f, 0.0f, Mathf.Sign(position.z) * 20.0f);
+        Vector3 elevatedPosition = position + new Vector3(0.0f, terrain.GetElevation(position.x, position.z) + 30.0f, 0.0f);
+        Quaternion rotation = Quaternion.LookRotation(Vector3.zero - position, Vector3.up);
+        Transform ship = Instantiate(shipPrefab, elevatedPosition, rotation) as Transform;
+        Vector3 cameraPosition = elevatedPosition - elevatedPosition.normalized * 20.0f;
         Transform camera = Instantiate(cameraPrefab, cameraPosition, rotation) as Transform;
 
         CameraFollow follower = camera.GetComponent<CameraFollow>();
