@@ -68,6 +68,9 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
             botRightView.rect = new Rect(0.5f, 0.0f, 0.5f, 0.5f);
         }
 
+        /* Only see the player's own reticles */
+        cam.cullingMask = cam.cullingMask | (1 << (28 + playerNum));
+
         Canvas HUD = Instantiate(HUDPrefab, Vector3.zero, Quaternion.identity) as Canvas;
         HUD.worldCamera = cam;
         HUD.transform.Find("HealthSlider").GetComponent<HealthSlider>().ship = ship.GetComponent<Ship>();

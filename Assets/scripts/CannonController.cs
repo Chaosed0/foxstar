@@ -14,7 +14,7 @@ public class CannonController : MonoBehaviour {
     private ShipMotor motor;
 
     void Start() {
-        colliders = player.GetComponents<MeshCollider>();
+        colliders = player.GetComponents<Collider>();
         motor = GetComponent<ShipMotor>();
     }
 
@@ -31,7 +31,7 @@ public class CannonController : MonoBehaviour {
                 Transform laser = Instantiate(laserPrefab, locations[i].position, locations[i].rotation) as Transform;
                 Rigidbody laserBody = laser.GetComponent<Rigidbody>();
                 laserBody.velocity = transform.forward * motor.getCurrentSpeed() + transform.forward.normalized * bulletSpeed;
-                foreach (MeshCollider collider in colliders) {
+                foreach (Collider collider in colliders) {
                     Physics.IgnoreCollision(laser.GetChild(0).GetComponent<Collider>(), collider);
                 }
             }

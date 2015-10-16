@@ -13,6 +13,9 @@ public class Ship : MonoBehaviour {
 	void Start () {
         health = maxHealth;
         motor = GetComponent<ShipMotor>();
+        if (OnHealthChange != null) {
+            OnHealthChange(health, 0);
+        }
 	}
 
     void OnCollisionEnter(Collision collision) {
