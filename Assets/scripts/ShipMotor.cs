@@ -57,6 +57,17 @@ public class ShipMotor : MonoBehaviour {
         rotation = this.transform.eulerAngles;
 	}
 
+    public void Reset() {
+        thrust = 0.0f;
+        pitch = 0.0f;
+        roll = 0.0f;
+        rotation = Vector3.zero;
+        rotSpeed = Vector3.zero;
+        boostTimer = boostTime;
+        boostCooldownTimer = boostCooldownTime;
+        speed = 0.0f;
+    }
+
     public bool IsBoosting() {
         return boostTimer < boostTime;
     }

@@ -10,6 +10,9 @@ public class Ship : MonoBehaviour {
     public delegate void HealthChange(int health, int change);
     public event HealthChange OnHealthChange;
 
+    public delegate void Dead();
+    public event Dead OnDead;
+
 	void Start () {
         health = maxHealth;
         motor = GetComponent<ShipMotor>();
@@ -17,6 +20,12 @@ public class Ship : MonoBehaviour {
             OnHealthChange(health, 0);
         }
 	}
+
+    public void Reset() {
+        motor.Reset();
+        health = maxHealth;
+        OnHealthChange(health, 0);
+    }
 
     void OnCollisionEnter(Collision collision) {
         Collider collider = collision.collider;
@@ -34,6 +43,12 @@ public class Ship : MonoBehaviour {
 
         if (OnHealthChange != null) {
             OnHealthChange(health, healthChange);
+        }
+
+        if (health < 0) {
+            if (OnDead != null) {
+                OnDead();
+            }
         }
     }
 }
