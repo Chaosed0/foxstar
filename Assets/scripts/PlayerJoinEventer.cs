@@ -37,6 +37,7 @@ public class PlayerJoinEventer : MonoBehaviour {
 
         if (playersJoined > 0 && playersJoined == readyCount && OnAllPlayersReady != null) {
             OnAllPlayersReady();
+            this.enabled = false;
         }
 	}
 }
