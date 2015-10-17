@@ -23,6 +23,5 @@ public class MinimapIcon : MonoBehaviour {
 
         rectTransform.anchoredPosition = followLocation;
         rectTransform.rotation = Quaternion.AngleAxis(-angle, new Vector3(0.0f,0.0f,1.0f));
-        Debug.Log(followLocation);
 	}
 }

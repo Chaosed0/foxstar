@@ -61,10 +61,20 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
             topRightView = cam;
             topLeftView.rect = new Rect(0.0f, 0.0f, 0.5f, 1.0f);
             topRightView.rect = new Rect(0.5f, 0.0f, 0.5f, 1.0f);
+
+            minimap.anchorMin = new Vector2(0.5f, 1.0f);
+            minimap.anchorMax = new Vector2(0.5f, 1.0f);
+            minimap.pivot = new Vector2(0.5f, 1.0f);
+            minimap.anchoredPosition = new Vector2(0.0f, -minimap.anchoredPosition.y);
         } else if (playerNum == 2) {
             botLeftView = cam;
             topLeftView.rect = new Rect(0.0f, 0.5f, 0.5f, 0.5f);
             botLeftView.rect = new Rect(0.0f, 0.0f, 0.5f, 0.5f);
+
+            minimap.anchorMin = new Vector2(0.5f, 0.5f);
+            minimap.anchorMax = new Vector2(0.5f, 0.5f);
+            minimap.pivot = new Vector2(0.5f, 0.5f);
+            minimap.anchoredPosition = new Vector2(0.0f, 0.0f);
         } else if (playerNum == 3) {
             botRightView = cam;
             topRightView.rect = new Rect(0.5f, 0.5f, 0.5f, 0.5f);
