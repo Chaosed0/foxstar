@@ -11,6 +11,9 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
     public Transform cameraPrefab;
     public Canvas HUDPrefab;
 
+    public RectTransform minimap;
+    public MinimapIcon[] minimapIcons;
+
     private int playerNum = 0;
     private int maxPlayers = 4;
     private PlayerJoinEventer eventer;
@@ -70,6 +73,12 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
 
         /* Only see the player's own reticles */
         cam.cullingMask = cam.cullingMask | (1 << (28 + playerNum));
+
+        /* Add a minimap icon for this player */
+        MinimapIcon icon = Instantiate(minimapIcons[playerNum], Vector3.zero, Quaternion.identity) as MinimapIcon;
+        icon.followTransform = ship;
+        icon.worldSize = new Vector2(1000.0f, 1000.0f);
+        icon.transform.SetParent(minimap.transform);
 
         Canvas HUD = Instantiate(HUDPrefab, Vector3.zero, Quaternion.identity) as Canvas;
         HUD.worldCamera = cam;
