@@ -35,10 +35,6 @@ public class PlayerInput : MonoBehaviour {
             motor.Boost();
         }
 
-        if (throttle > Util.Epsilon) {
-            Debug.Log("Player " + controllerPrefix + " throttle: " + throttle);
-        }
-
         throttle = Mathf.Clamp(throttle, -1.0f, 1.0f);
         pitch = Mathf.Clamp(pitch, -1.0f, 1.0f);
         roll = Mathf.Clamp(roll, -1.0f, 1.0f);
