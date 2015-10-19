@@ -16,12 +16,12 @@ public class ShipMotor : MonoBehaviour {
     public float maxYawSpeed = 50.0f;
 
     public float boostCooldownTime = 15.0f;
-    public float boostTime = 1.0f;
-    /*public float maxPitchAngle = 80.0f;
-    public float maxRollAngle = 80.0f;*/
+    public float boostTime = 2.0f;
+    public float boostRefillFactor = 2.0f;
 
     private float boostCooldownTimer = 15.0f;
     private float boostTimer = 2.0f;
+    private bool isBoosting = false;
 
     private float thrust = 0.0f;
     private float pitch = 0.0f;
@@ -44,6 +44,9 @@ public class ShipMotor : MonoBehaviour {
 
     public delegate void BoostAvailable();
     public event BoostAvailable OnBoostAvailable;
+
+    public delegate void BoostChange(float boost);
+    public event BoostChange OnBoostChange;
 
 	void Start () {
         body = GetComponent<Rigidbody>();
@@ -69,7 +72,7 @@ public class ShipMotor : MonoBehaviour {
     }
 
     public bool IsBoosting() {
-        return boostTimer < boostTime;
+        return isBoosting;
     }
 
     void FixedUpdate() {
@@ -115,9 +118,20 @@ public class ShipMotor : MonoBehaviour {
         body.velocity = transform.forward * speed;
         body.MoveRotation(Quaternion.Euler(rotation));
 
-        if (boostTimer < boostTime) {
-            boostTimer += Time.deltaTime;
-        } else {
+        if (IsBoosting()) {
+            boostTimer -= Time.deltaTime;
+            if (OnBoostChange != null) {
+                OnBoostChange(boostTimer);
+            }
+        } else if (boostTimer < boostTime) {
+            boostTimer = Mathf.Min(boostTimer + Time.deltaTime / boostRefillFactor, boostTime);
+            if (OnBoostChange != null) {
+                OnBoostChange(boostTimer);
+            }
+        }
+
+        if (boostTimer <= 0.0f) {
+            isBoosting = false;
             if (OnStopBoost != null) {
                 OnStopBoost();
             }
@@ -131,16 +145,22 @@ public class ShipMotor : MonoBehaviour {
         }
     }
 
-    public void Boost() {
-        if (boostCooldownTimer >= boostCooldownTime) {
-            boostTimer = 0.0f;
-            boostCooldownTimer = 0.0f;
-            if (OnStartBoost != null) {
-                OnStartBoost();
+    public void Boost(bool doBoost) {
+        if (doBoost && !IsBoosting()) {
+            if (boostCooldownTimer >= boostCooldownTime) {
+                isBoosting = true;
+                if (OnStartBoost != null) {
+                    OnStartBoost();
+                }
+            } else {
+                if (OnAttemptedBoost != null) {
+                    OnAttemptedBoost();
+                }
             }
-        } else {
-            if (OnAttemptedBoost != null) {
-                OnAttemptedBoost();
+        } else if (!doBoost && IsBoosting()) {
+            isBoosting = false;
+            if (OnStopBoost != null) {
+                OnStopBoost();
             }
         }
     }

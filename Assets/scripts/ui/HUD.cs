@@ -5,14 +5,23 @@ using System.Collections;
 public class HUD : MonoBehaviour {
     public Ship ship;
     public Slider healthSlider;
+    public Slider boostSlider;
     public float margin = 10.0f;
 
+    private ShipMotor motor;
+
 	void Start () {
+        motor = ship.GetComponent<ShipMotor>();
         ship.OnHealthChange += OnHealthChange;
+        motor.OnBoostChange += OnBoostChange;
 	}
 
     void OnHealthChange(int health, int change) {
         healthSlider.value = health / (float)ship.maxHealth;
+    }
+
+    void OnBoostChange(float boost) {
+        boostSlider.value = boost / (float)motor.boostTime;
     }
 
     public void SetOrientation(SplitHelper.Orientation orientation) {

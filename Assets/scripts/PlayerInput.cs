@@ -22,7 +22,8 @@ public class PlayerInput : MonoBehaviour {
         bool startFire = (bool)InputManager.GetButtonDown(controllerPrefix + "Fire");
         bool stopFire = (bool)InputManager.GetButtonUp(controllerPrefix + "Fire");
         bool cancel = (bool)InputManager.GetButtonDown(controllerPrefix + "Cancel");
-        bool boost = (bool)InputManager.GetButtonDown(controllerPrefix + "Boost");
+        bool startBoost = (bool)InputManager.GetButtonDown(controllerPrefix + "Boost");
+        bool stopBoost = (bool)InputManager.GetButtonUp(controllerPrefix + "Boost");
 
         if (startFire) {
             lockCursor();
@@ -32,8 +33,10 @@ public class PlayerInput : MonoBehaviour {
             unlockCursor();
         }
 
-        if (boost) {
-            motor.Boost();
+        if (startBoost) {
+            motor.Boost(true);
+        } else if (stopBoost) {
+            motor.Boost(false);
         }
 
         throttle = Mathf.Clamp(throttle, -1.0f, 1.0f);

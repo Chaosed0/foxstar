@@ -17,7 +17,6 @@ public class SinglePlayerJoinHandler: MonoBehaviour {
         Time.timeScale = 1.0f;
         group.alpha = 0.0f;
         input.SetPlayerPrefix(playerPrefix);
-        motor.Boost();
         eventer.enabled = false;
     }
 }
