@@ -15,8 +15,7 @@ public class PlayerInput : MonoBehaviour {
 	}
 
 	private void Update () {
-        float throttle = InputManager.GetAxis(controllerPrefix + "ThrottleForward");
-        float reverse = InputManager.GetAxis(controllerPrefix + "ThrottleBackward");
+        float throttle = InputManager.GetAxis(controllerPrefix + "Throttle");
         float pitch = InputManager.GetAxis(controllerPrefix + "Pitch");
         float roll = InputManager.GetAxis(controllerPrefix + "Roll");
         bool startFire = (bool)InputManager.GetButtonDown(controllerPrefix + "Fire");
@@ -36,11 +35,14 @@ public class PlayerInput : MonoBehaviour {
             motor.Boost();
         }
 
+        if (throttle > Util.Epsilon) {
+            Debug.Log("Player " + controllerPrefix + " throttle: " + throttle);
+        }
+
         throttle = Mathf.Clamp(throttle, -1.0f, 1.0f);
-        reverse = Mathf.Clamp(reverse, -1.0f, 1.0f);
         pitch = Mathf.Clamp(pitch, -1.0f, 1.0f);
         roll = Mathf.Clamp(roll, -1.0f, 1.0f);
-        motor.SetMovement(throttle - reverse, pitch, roll);
+        motor.SetMovement(throttle, pitch, roll);
 
         if (startFire) {
             cannon.setFiring(true);

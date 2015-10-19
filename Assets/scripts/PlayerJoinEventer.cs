@@ -25,6 +25,7 @@ public class PlayerJoinEventer : MonoBehaviour {
                 if (OnPlayerJoined != null) {
                     OnPlayerJoined(playerPrefixes[i]);
                 }
+                Debug.Log("Player prefix " + playerPrefixes[i] + " joined");
             }
         }
 
