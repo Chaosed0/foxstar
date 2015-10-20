@@ -25,6 +25,12 @@ public class PlayerInput : MonoBehaviour {
         bool startBoost = (bool)InputManager.GetButtonDown(controllerPrefix + "Boost");
         bool stopBoost = (bool)InputManager.GetButtonUp(controllerPrefix + "Boost");
 
+        bool special = (bool)InputManager.GetButtonDown(controllerPrefix + "Special");
+
+        if (special) {
+            motor.SetManeuver(ShipMotor.Maneuvers.IMMELMANN);
+        }
+
         if (startFire) {
             lockCursor();
         }

@@ -2,6 +2,14 @@
 using System.Collections;
 
 public class ShipMotor : MonoBehaviour {
+    public enum Maneuvers {
+        SOMERSAULT,
+        IMMELMANN,
+        BARRELROLL,
+        DODGE,
+        NONE
+    };
+
     private Rigidbody body;
 
     public float acceleration = 10.0f;
@@ -33,6 +41,11 @@ public class ShipMotor : MonoBehaviour {
     private float dragCoefficient = 0.2f;
     private float speed = 0.0f;
 
+    private bool limitRotation = true;
+    private bool dampRotation = true;
+    private bool tightRolls = false;
+    private Maneuvers currentManeuver = Maneuvers.NONE;
+
     public delegate void StartBoost();
     public event StartBoost OnStartBoost;
 
@@ -47,6 +60,12 @@ public class ShipMotor : MonoBehaviour {
 
     public delegate void BoostChange(float boost);
     public event BoostChange OnBoostChange;
+
+    public delegate void StartManeuver();
+    public event StartManeuver OnStartManeuver;
+
+    public delegate void StopManeuver();
+    public event StopManeuver OnStopManeuver;
 
 	void Start () {
         body = GetComponent<Rigidbody>();
@@ -68,6 +87,7 @@ public class ShipMotor : MonoBehaviour {
         rotSpeed = Vector3.zero;
         boostTimer = boostTime;
         boostCooldownTimer = boostCooldownTime;
+        currentManeuver = Maneuvers.NONE;
         speed = 0.0f;
     }
 
@@ -75,7 +95,37 @@ public class ShipMotor : MonoBehaviour {
         return isBoosting;
     }
 
+    public bool IsManeuvering() {
+        return currentManeuver != Maneuvers.NONE;
+    }
+
     void FixedUpdate() {
+        if (IsManeuvering()) {
+            bool done = false;
+            /* Override player's flight controls with our own */
+            switch (currentManeuver) {
+                case Maneuvers.SOMERSAULT:
+                    done = Somersault(1.0f);
+                    break;
+                case Maneuvers.IMMELMANN:
+                    done = Immelmann(1.0f);
+                    break;
+                case Maneuvers.BARRELROLL:
+                    done = BarrelRoll(1.0f);
+                    break;
+                case Maneuvers.DODGE:
+                    done = Dodge(1.0f);
+                    break;
+            }
+
+            if (done) {
+                currentManeuver = Maneuvers.NONE;
+                if (OnStopManeuver != null) {
+                    OnStopManeuver();
+                }
+            }
+        }
+
         if (IsBoosting()) {
             speed += boostAcceleration * Time.deltaTime;
         } else if (Mathf.Abs(thrust) > Util.Epsilon) {
@@ -90,22 +140,28 @@ public class ShipMotor : MonoBehaviour {
             rotSpeed.z += rollAccel * (-roll) * Time.deltaTime;
         }
 
-        rotSpeed.y -= rotation.z / 90.0f * yawAccel * Time.deltaTime;
+        if (!tightRolls) {
+            rotSpeed.y -= rotation.z / 90.0f * yawAccel * Time.deltaTime;
+        }
 
         float drag = dragCoefficient * speed * speed;
         speed -= drag * Time.deltaTime;
 
-        Vector3 angularDrag = new Vector3(
+        if (dampRotation) {
+            rotSpeed -= new Vector3(
                     rotSpeed.x/8.0f,
                     rotSpeed.y/8.0f,
                     rotSpeed.z/8.0f
                 );
-        Vector3 stabilization = new Vector3(
+        }
+
+        if (limitRotation) {
+            rotSpeed -= new Vector3(
                 rotation.x/8.0f * Time.deltaTime,
                 0.0f,
                 rotation.z/3.0f * Time.deltaTime
                 );
-        rotSpeed -= angularDrag + stabilization;
+        }
 
         rotation += rotSpeed;
         rotation.x = rotation.x % 360;
@@ -146,7 +202,7 @@ public class ShipMotor : MonoBehaviour {
     }
 
     public void Boost(bool doBoost) {
-        if (doBoost && !IsBoosting()) {
+        if (doBoost && !IsManeuvering() && !IsBoosting()) {
             if (boostCooldownTimer >= boostCooldownTime) {
                 isBoosting = true;
                 if (OnStartBoost != null) {
@@ -169,6 +225,38 @@ public class ShipMotor : MonoBehaviour {
         return thrust;
     }
 
+    public bool Somersault(float direction) {
+        return true;
+    }
+
+    public bool Immelmann(float direction) {
+        limitRotation = false;
+        tightRolls = true;
+        if (Mathf.Abs(rotation.x) < 180.0f) {
+            /* Pitch upwards until we reach the apex */
+            SetMovement(1.0f, -direction, 0.0f);
+        } else if (rotation.z < 180.0f) {
+            /* Roll until we're upright again */
+            SetMovement(1.0f, 0.0f, -1.0f);
+        } else {
+            rotation.x = -rotation.x % 180.0f;
+            rotation.y = (rotation.y + 180.0f) % 360;
+            rotation.z = -rotation.z % 180.0f;
+            limitRotation = true;
+            tightRolls = false;
+            return true;
+        }
+        return false;
+    }
+
+    public bool BarrelRoll(float direction) {
+        return true;
+    }
+
+    public bool Dodge(float direction) {
+        return true;
+    }
+
     public void SetMovement(float thrust, float pitch, float roll) {
         this.thrust = thrust;
         this.roll = roll;
@@ -181,5 +269,13 @@ public class ShipMotor : MonoBehaviour {
 
     public Vector3 getCurrentRotation() {
         return rotation;
+    }
+
+    public void SetManeuver(Maneuvers maneuver) {
+        isBoosting = false;
+        currentManeuver = maneuver;
+        if (OnStartManeuver != null) {
+            OnStartManeuver();
+        }
     }
 }
