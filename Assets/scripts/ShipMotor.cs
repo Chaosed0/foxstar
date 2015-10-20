@@ -100,6 +100,11 @@ public class ShipMotor : MonoBehaviour {
     }
 
     void FixedUpdate() {
+        if (Mathf.Abs(transform.position.x) > 600.0f ||
+                Mathf.Abs(transform.position.z) > 600.0f) {
+            SetManeuver(Maneuvers.IMMELMANN);
+        }
+
         if (IsManeuvering()) {
             bool done = false;
             /* Override player's flight controls with our own */
