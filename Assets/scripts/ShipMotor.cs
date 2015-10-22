@@ -46,6 +46,7 @@ public class ShipMotor : MonoBehaviour {
     private bool limitRotation = true;
     private bool dampRotation = true;
     private bool doYaw = true;
+    private bool wrapRotation = true;
     private float yawMultiplier = 1.0f;
     private Maneuvers currentManeuver = Maneuvers.NONE;
     public float maneuverDirection = 0.0f;
@@ -180,9 +181,12 @@ public class ShipMotor : MonoBehaviour {
         }
 
         rotation += rotSpeed;
-        rotation.x = rotation.x % 360;
-        rotation.y = rotation.y % 360;
-        rotation.z = rotation.z % 360;
+
+        if (wrapRotation) {
+            rotation.x = rotation.x % 360;
+            rotation.y = rotation.y % 360;
+            rotation.z = rotation.z % 360;
+        }
 
         /* Don't allow backing up */
         speed = Mathf.Max(0.0f, speed);
@@ -243,6 +247,7 @@ public class ShipMotor : MonoBehaviour {
 
     public bool Somersault(float direction) {
         limitRotation = false;
+        wrapRotation = false;
         doYaw = false;
         if (Mathf.Abs(rotation.x) < 360.0f) {
             SetMovement(1.0f, direction * 2.0f, 0.0f, 0.0f);
@@ -250,6 +255,7 @@ public class ShipMotor : MonoBehaviour {
             rotation.x = rotation.x % 360.0f;
             limitRotation = true;
             doYaw = true;
+            wrapRotation = true;
             return true;
         }
         return false;
