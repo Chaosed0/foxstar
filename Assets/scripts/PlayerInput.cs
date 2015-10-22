@@ -28,7 +28,9 @@ public class PlayerInput : MonoBehaviour {
         bool special = (bool)InputManager.GetButtonDown(controllerPrefix + "Special");
 
         if (special) {
-            motor.SetManeuver(ShipMotor.Maneuvers.IMMELMANN);
+            if (Mathf.Abs(pitch) > Util.Epsilon) {
+                motor.SetManeuver(ShipMotor.Maneuvers.IMMELMANN, Mathf.Sign(-pitch));
+            }
         }
 
         if (startFire) {

@@ -46,7 +46,9 @@ public class ShipMotor : MonoBehaviour {
     private bool limitRotation = true;
     private bool dampRotation = true;
     private bool doYaw = false;
+    private float yawMultiplier = 1.0f;
     private Maneuvers currentManeuver = Maneuvers.NONE;
+    public float maneuverDirection = 0.0f;
 
     public delegate void StartBoost();
     public event StartBoost OnStartBoost;
@@ -102,9 +104,9 @@ public class ShipMotor : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        if (Mathf.Abs(transform.position.x) > 1200.0f ||
-                Mathf.Abs(transform.position.z) > 1200.0f) {
-            SetManeuver(Maneuvers.IMMELMANN);
+        if (Mathf.Abs(transform.position.x) > 2000.0f ||
+                Mathf.Abs(transform.position.z) > 2000.0f) {
+            SetManeuver(Maneuvers.IMMELMANN, 1.0f);
         }
 
         if (IsManeuvering()) {
@@ -112,16 +114,16 @@ public class ShipMotor : MonoBehaviour {
             /* Override player's flight controls with our own */
             switch (currentManeuver) {
                 case Maneuvers.SOMERSAULT:
-                    done = Somersault(1.0f);
+                    done = Somersault(maneuverDirection);
                     break;
                 case Maneuvers.IMMELMANN:
-                    done = Immelmann(1.0f);
+                    done = Immelmann(maneuverDirection);
                     break;
                 case Maneuvers.BARRELROLL:
-                    done = BarrelRoll(1.0f);
+                    done = BarrelRoll(maneuverDirection);
                     break;
                 case Maneuvers.DODGE:
-                    done = Dodge(1.0f);
+                    done = Dodge(maneuverDirection);
                     break;
             }
 
@@ -140,7 +142,12 @@ public class ShipMotor : MonoBehaviour {
         }
 
         if (Mathf.Abs(pitch) > Util.Epsilon) {
-            rotSpeed.x += pitchAccel * pitch * Time.deltaTime;
+            if (Mathf.Abs(tightRoll) > Util.Epsilon) {
+                /* In a tight roll, pitch controls yaw amount */
+                yawMultiplier = 1.0f + pitch * 2.0f;
+            } else {
+                rotSpeed.x += pitchAccel * pitch * Time.deltaTime;
+            }
         }
 
         if (Mathf.Abs(tightRoll) > Util.Epsilon) {
@@ -150,7 +157,8 @@ public class ShipMotor : MonoBehaviour {
         }
 
         if (!doYaw) {
-            rotSpeed.y -= rotation.z / 90.0f * yawAccel * Time.deltaTime;
+            rotSpeed.y -= yawMultiplier * rotation.z / 90.0f * yawAccel * Time.deltaTime;
+            yawMultiplier = 1.0f;
         }
 
         float drag = dragCoefficient * speed * speed;
@@ -168,7 +176,7 @@ public class ShipMotor : MonoBehaviour {
             rotSpeed -= new Vector3(
                 rotation.x/8.0f * Time.deltaTime,
                 0.0f,
-                rotation.z/2.0f * Time.deltaTime
+                rotation.z/1.5f * Time.deltaTime
                 );
         }
 
@@ -242,11 +250,11 @@ public class ShipMotor : MonoBehaviour {
         limitRotation = false;
         doYaw = true;
         if (Mathf.Abs(rotation.x) < 180.0f) {
-            /* Pitch upwards until we reach the apex */
+            /* Pitch until we reach the apex */
             SetMovement(1.0f, -direction, 0.0f, 0.0f);
-        } else if (rotation.z < 180.0f) {
+        } else if (Mathf.Abs(rotation.z) < 180.0f) {
             /* Roll until we're upright again */
-            SetMovement(1.0f, 0.0f, 0.0f, -1.0f);
+            SetMovement(1.0f, 0.0f, 0.0f, -0.5f);
         } else {
             rotation.x = -rotation.x % 180.0f;
             rotation.y = (rotation.y + 180.0f) % 360;
@@ -281,9 +289,14 @@ public class ShipMotor : MonoBehaviour {
         return rotation;
     }
 
-    public void SetManeuver(Maneuvers maneuver) {
+    public void SetManeuver(Maneuvers maneuver, float direction) {
+        if (IsManeuvering()) {
+            return;
+        }
+
         isBoosting = false;
         currentManeuver = maneuver;
+        maneuverDirection = Mathf.Sign(direction);
         if (OnStartManeuver != null) {
             OnStartManeuver();
         }
