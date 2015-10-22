@@ -45,7 +45,7 @@ public class ShipMotor : MonoBehaviour {
 
     private bool limitRotation = true;
     private bool dampRotation = true;
-    private bool doYaw = false;
+    private bool doYaw = true;
     private float yawMultiplier = 1.0f;
     private Maneuvers currentManeuver = Maneuvers.NONE;
     public float maneuverDirection = 0.0f;
@@ -106,7 +106,7 @@ public class ShipMotor : MonoBehaviour {
     void FixedUpdate() {
         if (Mathf.Abs(transform.position.x) > 2000.0f ||
                 Mathf.Abs(transform.position.z) > 2000.0f) {
-            SetManeuver(Maneuvers.IMMELMANN, 1.0f);
+            SetManeuver(Maneuvers.IMMELMANN, -1.0f);
         }
 
         if (IsManeuvering()) {
@@ -156,7 +156,7 @@ public class ShipMotor : MonoBehaviour {
             rotSpeed.z += smallRollAccel * (-roll) * Time.deltaTime;
         }
 
-        if (!doYaw) {
+        if (doYaw) {
             rotSpeed.y -= yawMultiplier * rotation.z / 90.0f * yawAccel * Time.deltaTime;
             yawMultiplier = 1.0f;
         }
@@ -242,15 +242,25 @@ public class ShipMotor : MonoBehaviour {
     }
 
     public bool Somersault(float direction) {
-        return true;
+        limitRotation = false;
+        doYaw = false;
+        if (Mathf.Abs(rotation.x) < 360.0f) {
+            SetMovement(1.0f, direction * 2.0f, 0.0f, 0.0f);
+        } else {
+            rotation.x = rotation.x % 360.0f;
+            limitRotation = true;
+            doYaw = true;
+            return true;
+        }
+        return false;
     }
 
     public bool Immelmann(float direction) {
         limitRotation = false;
-        doYaw = true;
+        doYaw = false;
         if (Mathf.Abs(rotation.x) < 180.0f) {
             /* Pitch until we reach the apex */
-            SetMovement(1.0f, -direction, 0.0f, 0.0f);
+            SetMovement(1.0f, direction, 0.0f, 0.0f);
         } else if (Mathf.Abs(rotation.z) < 180.0f) {
             /* Roll until we're upright again */
             SetMovement(1.0f, 0.0f, 0.0f, -0.5f);
@@ -259,7 +269,7 @@ public class ShipMotor : MonoBehaviour {
             rotation.y = (rotation.y + 180.0f) % 360;
             rotation.z = -rotation.z % 180.0f;
             limitRotation = true;
-            doYaw = false;
+            doYaw = true;
             return true;
         }
         return false;

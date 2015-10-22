@@ -25,11 +25,22 @@ public class PlayerInput : MonoBehaviour {
         bool startBoost = (bool)InputManager.GetButtonDown(controllerPrefix + "Boost");
         bool stopBoost = (bool)InputManager.GetButtonUp(controllerPrefix + "Boost");
 
-        bool special = (bool)InputManager.GetButtonDown(controllerPrefix + "Special");
+        bool maneuver1 = (bool)InputManager.GetButtonDown(controllerPrefix + "Maneuver1");
+        bool maneuver2 = (bool)InputManager.GetButtonDown(controllerPrefix + "Maneuver2");
 
-        if (special) {
-            if (Mathf.Abs(pitch) > Util.Epsilon) {
-                motor.SetManeuver(ShipMotor.Maneuvers.IMMELMANN, Mathf.Sign(-pitch));
+        float pitchMag = Mathf.Abs(pitch);
+        float rollMag = Mathf.Abs(roll);
+        if (maneuver1) {
+            if (pitchMag > rollMag && pitchMag > Util.Epsilon) {
+                motor.SetManeuver(ShipMotor.Maneuvers.IMMELMANN, pitch);
+            } else if (rollMag > pitchMag && rollMag > Util.Epsilon) {
+                motor.SetManeuver(ShipMotor.Maneuvers.BARRELROLL, roll);
+            }
+        } else if (maneuver2) {
+            if (pitchMag > rollMag && pitchMag > Util.Epsilon) {
+                motor.SetManeuver(ShipMotor.Maneuvers.SOMERSAULT, pitch);
+            } else if (rollMag > pitchMag && rollMag > Util.Epsilon) {
+                motor.SetManeuver(ShipMotor.Maneuvers.DODGE, roll);
             }
         }
 
