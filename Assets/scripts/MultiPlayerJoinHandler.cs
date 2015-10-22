@@ -21,10 +21,10 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
     private SplitHelper splitHelper;
 
     private Vector3[] initialShipPositions = {
-        new Vector3(500.0f, 0.0f, 500.0f),
-        new Vector3(-500.0f, 0.0f, -500.0f),
-        new Vector3(500.0f, 0.0f, -500.0f),
-        new Vector3(-500.0f, 0.0f, 500.0f),
+        new Vector3(1000.0f, 0.0f, 1000.0f),
+        new Vector3(-1000.0f, 0.0f, -1000.0f),
+        new Vector3(1000.0f, 0.0f, -1000.0f),
+        new Vector3(-1000.0f, 0.0f, 1000.0f),
     };
 
 	void Start() {
@@ -35,17 +35,39 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
         splitHelper = new SplitHelper();
 	}
 
-    void OnPlayerJoined(string playerPrefix) {
-        /* Regardless of who joined, do away with the initial camera */
-        initialCamera.enabled = false;
-
-        /* Create a camera and a ship for this player */
+    Transform CreateShip() {
+        /* Create a ship for this player */
         Vector3 position = initialShipPositions[playerNum];
         Vector3 elevatedPosition = position + new Vector3(0.0f, terrain.GetElevation(position.x, position.z) + 30.0f, 0.0f);
         Quaternion rotation = Quaternion.LookRotation(Vector3.zero - position, Vector3.up);
         Transform shipTransform = Instantiate(shipPrefab, elevatedPosition, rotation) as Transform;
-        Vector3 cameraPosition = elevatedPosition - elevatedPosition.normalized * 20.0f;
-        Transform cameraTransform = Instantiate(cameraPrefab, cameraPosition, rotation) as Transform;
+
+        return shipTransform;
+    }
+
+    MinimapIcon CreateIcon(Transform shipTransform) {
+        /* Add a minimap icon for this ship */
+        MinimapIcon icon = Instantiate(minimapIcons[playerNum], Vector3.zero, Quaternion.identity) as MinimapIcon;
+        icon.followTransform = shipTransform;
+        icon.worldSize = new Vector2(1200.0f, 1200.0f);
+        icon.transform.SetParent(minimap.transform);
+
+        return icon;
+    }
+
+    void OnPlayerJoined(string playerPrefix) {
+        /* Regardless of who joined, do away with the initial camera */
+        initialCamera.enabled = false;
+
+        /* Create this player's ship */
+        Transform shipTransform = CreateShip();
+
+        /* Create an icon for the ship */
+        CreateIcon(shipTransform);
+
+        /* Create a camera for this player */
+        Vector3 cameraPosition = shipTransform.position - shipTransform.position.normalized * 20.0f;
+        Transform cameraTransform = Instantiate(cameraPrefab, cameraPosition, shipTransform.rotation) as Transform;
 
         /* Initialize the camera to follow the player's ship */
         CameraFollow follower = cameraTransform.GetComponent<CameraFollow>();
@@ -71,13 +93,7 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
         inputs[playerNum] = input;
         input.enabled = false;
 
-        /* Add a minimap icon for this player */
-        MinimapIcon icon = Instantiate(minimapIcons[playerNum], Vector3.zero, Quaternion.identity) as MinimapIcon;
-        icon.followTransform = shipTransform;
-        icon.worldSize = new Vector2(600.0f, 600.0f);
-        icon.transform.SetParent(minimap.transform);
-
-        /* Temporary */
+        /* Add respawn handler */
         ShipRespawnHandler respawnHandler = shipTransform.GetComponent<ShipRespawnHandler>();
         respawnHandler.terrain = terrain;
 
@@ -88,7 +104,15 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
         for (int i = 0; i < playerNum; i++) {
             PlayerInput input = inputs[i];
             input.enabled = true;
-            //input.GetComponent<ShipMotor>().Boost();
+        }
+
+        if (playerNum == 1) {
+            Transform AIShipTransform = CreateShip();
+            CreateIcon(AIShipTransform);
+            ShipRespawnHandler respawnHandler = AIShipTransform.GetComponent<ShipRespawnHandler>();
+            respawnHandler.terrain = terrain;
+            Destroy(AIShipTransform.GetComponent<PlayerInput>());
+            AIShipTransform.gameObject.AddComponent<AIFollowInput>();
         }
 
         hideOnReady.alpha = 0.0f;

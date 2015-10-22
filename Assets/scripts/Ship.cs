@@ -24,7 +24,9 @@ public class Ship : MonoBehaviour {
     public void Reset() {
         motor.Reset();
         health = maxHealth;
-        OnHealthChange(health, 0);
+        if (OnHealthChange != null) {
+            OnHealthChange(health, 0);
+        }
     }
 
     void OnCollisionEnter(Collision collision) {

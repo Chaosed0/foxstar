@@ -55,7 +55,7 @@ public class PlayerInput : MonoBehaviour {
             roll += tightRoll;
         }
 
-        motor.SetMovement(throttle, pitch, roll);
+        motor.SetMovement(throttle, pitch, roll, tightRoll);
 
         if (startFire) {
             cannon.setFiring(true);

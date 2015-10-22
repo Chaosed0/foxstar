@@ -16,9 +16,10 @@ public class ShipMotor : MonoBehaviour {
     public float boostAcceleration = 30.0f;
     public float maxSpeed = 100.0f;
 
-    public float pitchAccel = 10.0f;
-    public float rollAccel = 10.0f;
-    public float yawAccel = 10.0f;
+    public float pitchAccel = 20.0f;
+    public float smallRollAccel = 15.0f;
+    public float tightRollAccel = 40.0f;
+    public float yawAccel = 20.0f;
     public float maxPitchSpeed = 200.0f;
     public float maxRollSpeed = 300.0f;
     public float maxYawSpeed = 50.0f;
@@ -34,6 +35,7 @@ public class ShipMotor : MonoBehaviour {
     private float thrust = 0.0f;
     private float pitch = 0.0f;
     private float roll = 0.0f;
+    private float tightRoll = 0.0f;
 
     private Vector3 rotSpeed = Vector3.zero;
     private Vector3 rotation = Vector3.zero;
@@ -43,7 +45,7 @@ public class ShipMotor : MonoBehaviour {
 
     private bool limitRotation = true;
     private bool dampRotation = true;
-    private bool tightRolls = false;
+    private bool doYaw = false;
     private Maneuvers currentManeuver = Maneuvers.NONE;
 
     public delegate void StartBoost();
@@ -100,8 +102,8 @@ public class ShipMotor : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        if (Mathf.Abs(transform.position.x) > 600.0f ||
-                Mathf.Abs(transform.position.z) > 600.0f) {
+        if (Mathf.Abs(transform.position.x) > 1200.0f ||
+                Mathf.Abs(transform.position.z) > 1200.0f) {
             SetManeuver(Maneuvers.IMMELMANN);
         }
 
@@ -141,11 +143,13 @@ public class ShipMotor : MonoBehaviour {
             rotSpeed.x += pitchAccel * pitch * Time.deltaTime;
         }
 
-        if (Mathf.Abs(roll) > Util.Epsilon) {
-            rotSpeed.z += rollAccel * (-roll) * Time.deltaTime;
+        if (Mathf.Abs(tightRoll) > Util.Epsilon) {
+            rotSpeed.z += tightRollAccel * (-tightRoll) * Time.deltaTime;
+        } else if (Mathf.Abs(roll) > Util.Epsilon) {
+            rotSpeed.z += smallRollAccel * (-roll) * Time.deltaTime;
         }
 
-        if (!tightRolls) {
+        if (!doYaw) {
             rotSpeed.y -= rotation.z / 90.0f * yawAccel * Time.deltaTime;
         }
 
@@ -164,7 +168,7 @@ public class ShipMotor : MonoBehaviour {
             rotSpeed -= new Vector3(
                 rotation.x/8.0f * Time.deltaTime,
                 0.0f,
-                rotation.z/3.0f * Time.deltaTime
+                rotation.z/2.0f * Time.deltaTime
                 );
         }
 
@@ -236,19 +240,19 @@ public class ShipMotor : MonoBehaviour {
 
     public bool Immelmann(float direction) {
         limitRotation = false;
-        tightRolls = true;
+        doYaw = true;
         if (Mathf.Abs(rotation.x) < 180.0f) {
             /* Pitch upwards until we reach the apex */
-            SetMovement(1.0f, -direction, 0.0f);
+            SetMovement(1.0f, -direction, 0.0f, 0.0f);
         } else if (rotation.z < 180.0f) {
             /* Roll until we're upright again */
-            SetMovement(1.0f, 0.0f, -1.0f);
+            SetMovement(1.0f, 0.0f, 0.0f, -1.0f);
         } else {
             rotation.x = -rotation.x % 180.0f;
             rotation.y = (rotation.y + 180.0f) % 360;
             rotation.z = -rotation.z % 180.0f;
             limitRotation = true;
-            tightRolls = false;
+            doYaw = false;
             return true;
         }
         return false;
@@ -262,9 +266,10 @@ public class ShipMotor : MonoBehaviour {
         return true;
     }
 
-    public void SetMovement(float thrust, float pitch, float roll) {
+    public void SetMovement(float thrust, float pitch, float roll, float tightRoll) {
         this.thrust = thrust;
         this.roll = roll;
+        this.tightRoll = tightRoll;
         this.pitch = pitch;
     }
 
