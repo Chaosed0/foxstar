@@ -144,7 +144,7 @@ public class ShipMotor : MonoBehaviour {
         if (Mathf.Abs(pitch) > Util.Epsilon) {
             if (Mathf.Abs(tightRoll) > Util.Epsilon) {
                 /* In a tight roll, pitch controls yaw amount */
-                yawMultiplier = 1.0f + pitch * 2.0f;
+                yawMultiplier = 1.0f + pitch * 1.0f;
             } else {
                 rotSpeed.x += pitchAccel * pitch * Time.deltaTime;
             }
@@ -173,11 +173,10 @@ public class ShipMotor : MonoBehaviour {
         }
 
         if (limitRotation) {
-            rotSpeed -= new Vector3(
-                rotation.x/8.0f * Time.deltaTime,
-                0.0f,
-                rotation.z/1.5f * Time.deltaTime
-                );
+            Vector3 vel = Vector3.zero;
+            Vector3 damped = Vector3.SmoothDamp(rotation, Vector3.zero, ref vel, 0.1f);
+            rotation.x = damped.x;
+            rotation.z = damped.z;
         }
 
         rotation += rotSpeed;
