@@ -2,6 +2,14 @@
 using System.Collections;
 using System.IO;
 
+[System.Serializable]
+public class DetailGroup {
+    public Transform[] prefabs;
+    public float density = 0.01f;
+    public float scaleMin = 1.0f;
+    public float scaleMax = 2.0f;
+}
+
 public class TerrainGenerator : MonoBehaviour {
     public int xsize = 128;
     public int ysize = 128;
@@ -18,6 +26,8 @@ public class TerrainGenerator : MonoBehaviour {
 
     public float xPerturb = 0.2f;
     public float yPerturb = 0.2f;
+
+    public DetailGroup[] detailGroups;
 
     private Vector3[,] sharedVertices;
 
@@ -37,6 +47,7 @@ public class TerrainGenerator : MonoBehaviour {
 
 	void Start () {
         Generate();
+        GenerateDetailMeshes();
     }
 
     /* Returns a rough approximation of the height at a given point in worldspace */
@@ -50,6 +61,25 @@ public class TerrainGenerator : MonoBehaviour {
         int localX = (int)(x/xscale + xsize/2.0f);
         int localY = (int)(y/yscale + ysize/2.0f);
         return sharedVertices[localY,localX].y;
+    }
+
+    public void GenerateDetailMeshes() {
+        for (int i = 0; i < detailGroups.Length; i++) {
+            DetailGroup group = detailGroups[i];
+            int numberToGenerate = (int)(xsize*ysize * group.density);
+            for (int j = 0; j < numberToGenerate; j++) {
+                Transform randomDetail = group.prefabs[(int)Random.Range(0.0f, group.prefabs.Length)];
+
+                float x = Random.Range(-xsize*xscale/2.0f, xsize*xscale/2.0f);
+                float z = Random.Range(-ysize*yscale/2.0f, ysize*yscale/2.0f); 
+                float y = GetElevation(x, z);
+                float scale = Random.Range(group.scaleMin, group.scaleMax);
+                Quaternion rotation = Quaternion.AngleAxis(Random.Range(0.0f, 360.0f), Vector3.up);
+
+                Transform detail = Instantiate(randomDetail, new Vector3(x,y,z), rotation) as Transform;
+                detail.localScale = detail.localScale * scale;
+            }
+        }
     }
 
     public void Generate() {

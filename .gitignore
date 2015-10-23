@@ -33,3 +33,6 @@ Thumbs.db
 *.swp
 InputManager
 InputManager.meta
+
+*.blend[0-9]
+*.blend[0-9].meta
