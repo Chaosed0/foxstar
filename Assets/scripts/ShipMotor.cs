@@ -20,9 +20,6 @@ public class ShipMotor : MonoBehaviour {
     public float smallRollAccel = 15.0f;
     public float tightRollAccel = 40.0f;
     public float yawAccel = 20.0f;
-    public float maxPitchSpeed = 200.0f;
-    public float maxRollSpeed = 300.0f;
-    public float maxYawSpeed = 50.0f;
 
     public float boostCooldownTime = 15.0f;
     public float boostTime = 2.0f;
@@ -167,15 +164,15 @@ public class ShipMotor : MonoBehaviour {
 
         if (dampRotation) {
             rotSpeed -= new Vector3(
-                    rotSpeed.x/8.0f,
-                    rotSpeed.y/8.0f,
-                    rotSpeed.z/8.0f
+                    rotSpeed.x/10.0f,
+                    rotSpeed.y/10.0f,
+                    rotSpeed.z/10.0f
                 );
         }
 
         if (limitRotation) {
             Vector3 vel = Vector3.zero;
-            Vector3 damped = Vector3.SmoothDamp(rotation, Vector3.zero, ref vel, 0.1f);
+            Vector3 damped = Vector3.SmoothDamp(rotation, Vector3.zero, ref vel, 0.05f);
             rotation.x = damped.x;
             rotation.z = damped.z;
         }
@@ -250,7 +247,7 @@ public class ShipMotor : MonoBehaviour {
         wrapRotation = false;
         doYaw = false;
         if (Mathf.Abs(rotation.x) < 360.0f) {
-            SetMovement(1.0f, direction * 2.0f, 0.0f, 0.0f);
+            SetMovement(1.0f, direction, 0.0f, 0.0f);
         } else {
             rotation.x = rotation.x % 360.0f;
             limitRotation = true;
@@ -266,10 +263,10 @@ public class ShipMotor : MonoBehaviour {
         doYaw = false;
         if (Mathf.Abs(rotation.x) < 180.0f) {
             /* Pitch until we reach the apex */
-            SetMovement(1.0f, direction, 0.0f, 0.0f);
+            SetMovement(1.0f, direction/2.0f, 0.0f, 0.0f);
         } else if (Mathf.Abs(rotation.z) < 180.0f) {
             /* Roll until we're upright again */
-            SetMovement(1.0f, 0.0f, 0.0f, -0.5f);
+            SetMovement(1.0f, 0.0f, 0.0f, -0.4f);
         } else {
             rotation.x = -rotation.x % 180.0f;
             rotation.y = (rotation.y + 180.0f) % 360;
