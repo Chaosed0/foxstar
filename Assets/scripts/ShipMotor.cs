@@ -82,14 +82,29 @@ public class ShipMotor : MonoBehaviour {
 	}
 
     public void Reset() {
+        if (IsBoosting() && OnStopBoost != null) {
+            OnStopBoost();
+        }
+
+        if (IsManeuvering() && OnStopManeuver != null) {
+            OnStopManeuver();
+        }
+
         thrust = 0.0f;
         pitch = 0.0f;
         roll = 0.0f;
-        rotation = Vector3.zero;
+        rotation = Quaternion.AngleAxis(Random.Range(0.0f, 360.0f), Vector3.up).eulerAngles;
         rotSpeed = Vector3.zero;
         boostTimer = boostTime;
         boostCooldownTimer = boostCooldownTime;
+
         currentManeuver = Maneuvers.NONE;
+        maneuverDirection = 0.0f;
+        limitRotation = true;
+        dampRotation = true;
+        doYaw = true;
+        wrapRotation = true;
+        yawMultiplier = 1.0f;
         speed = 0.0f;
     }
 
@@ -247,7 +262,7 @@ public class ShipMotor : MonoBehaviour {
         wrapRotation = false;
         doYaw = false;
         if (Mathf.Abs(rotation.x) < 360.0f) {
-            SetMovement(1.0f, direction, 0.0f, 0.0f);
+            SetMovement(1.0f, direction/2.0f, 0.0f, 0.0f);
         } else {
             rotation.x = rotation.x % 360.0f;
             limitRotation = true;

@@ -14,6 +14,5 @@ public class ShipRespawnHandler : MonoBehaviour {
         ship.Reset();
         Vector3 position = new Vector3(Random.Range(-600.0f, 600.0f), 0.0f, Random.Range(-600.0f, 600.0f));
         transform.position = position + new Vector3(0.0f, terrain.GetElevation(position.x, position.z) + 30.0f, 0.0f);
-        transform.rotation = Quaternion.LookRotation(Vector3.zero - position, Vector3.up);
     }
 }

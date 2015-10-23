@@ -78,6 +78,7 @@ public class TerrainGenerator : MonoBehaviour {
 
                 Transform detail = Instantiate(randomDetail, new Vector3(x,y,z), rotation) as Transform;
                 detail.localScale = detail.localScale * scale;
+                detail.parent = this.transform;
             }
         }
     }
