@@ -77,6 +77,8 @@ public class ShipMotor : MonoBehaviour {
         boostTimer = boostTime;
 
         dragCoefficient = acceleration/(maxSpeed*maxSpeed);
+        rotation = transform.rotation.eulerAngles;
+        targetRotation = rotation;
 	}
 
     public void Reset() {
@@ -93,7 +95,7 @@ public class ShipMotor : MonoBehaviour {
         roll = 0.0f;
         boostTimer = boostTime;
         boostCooldownTimer = boostCooldownTime;
-        rotation = Quaternion.AngleAxis(Random.Range(0.0f, 360.0f), Vector3.up).eulerAngles;
+        rotation = transform.rotation.eulerAngles;
         targetRotation = rotation;
 
         currentManeuver = Maneuvers.NONE;
