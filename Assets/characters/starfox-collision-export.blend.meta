@@ -1,67 +1,39 @@
 fileFormatVersion: 2
-guid: cfae22109c21ee34baccc3802b1e101d
-timeCreated: 1443890343
+guid: 5902fe304f200de4082c8d4d61d6d4d9
+timeCreated: 1445698878
 licenseType: Free
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
-    100000: Cube.003
-    100002: Empty
-    100004: //RootNode
-    100006: Cube
-    100008: Cube.001
-    100010: Cube.002
-    100012: Cube.004
-    100014: AileronColliderL
-    100016: AileronColliderR
-    100018: BodyCollider
-    100020: WingColliderL
-    100022: WingColliderR
-    400000: Cube.003
-    400002: Empty
-    400004: //RootNode
-    400006: Cube
-    400008: Cube.001
-    400010: Cube.002
-    400012: Cube.004
-    400014: AileronColliderL
-    400016: AileronColliderR
-    400018: BodyCollider
-    400020: WingColliderL
-    400022: WingColliderR
-    2300000: Cube.003
-    2300002: //RootNode
-    2300004: Cube
-    2300006: Cube.001
-    2300008: Cube.002
-    2300010: Cube.004
-    2300012: AileronColliderL
-    2300014: AileronColliderR
-    2300016: BodyCollider
-    2300018: WingColliderL
-    2300020: WingColliderR
-    3300000: Cube.003
-    3300002: //RootNode
-    3300004: Cube
-    3300006: Cube.001
-    3300008: Cube.002
-    3300010: Cube.004
-    3300012: AileronColliderL
-    3300014: AileronColliderR
-    3300016: BodyCollider
-    3300018: WingColliderL
-    3300020: WingColliderR
-    4300000: Cube.003
-    4300002: StarfoxCollider
-    4300004: Cube.004
-    4300006: Cube.002
-    4300008: Cube.001
-    4300010: Cube
-    4300012: AileronColliderL
-    4300014: WingColliderR
-    4300016: AileronColliderR
-    4300018: WingColliderL
-    4300020: BodyCollider
+    100000: AileronColliderL
+    100002: AileronColliderR
+    100004: BodyCollider
+    100006: //RootNode
+    100008: WingColliderL
+    100010: WingColliderR
+    400000: AileronColliderL
+    400002: AileronColliderR
+    400004: BodyCollider
+    400006: //RootNode
+    400008: WingColliderL
+    400010: WingColliderR
+    2300000: AileronColliderL
+    2300002: AileronColliderR
+    2300004: BodyCollider
+    2300006: WingColliderL
+    2300008: WingColliderR
+    3300000: AileronColliderL
+    3300002: AileronColliderR
+    3300004: BodyCollider
+    3300006: WingColliderL
+    3300008: WingColliderR
+    4300000: AileronColliderL
+    4300002: WingColliderR
+    4300004: AileronColliderR
+    4300006: WingColliderL
+    4300008: BodyCollider
+    7400000: Default Take
+    9500000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
@@ -120,7 +92,7 @@ ModelImporter:
     rootMotionBoneName: 
     hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 

@@ -1,26 +1,17 @@
 fileFormatVersion: 2
-guid: 71af460178b615b4c813e3091a267f16
-timeCreated: 1443882623
+guid: c35251763acf6394da5221ea96ed048d
+timeCreated: 1445698879
 licenseType: Free
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
-    100000: Empty
-    100002: //RootNode
-    100004: Wings
-    100006: Ship
-    400000: Empty
-    400002: //RootNode
-    400004: Wings
-    400006: Ship
-    2300000: Wings
-    2300002: Ship
-    2300004: //RootNode
-    3300000: Wings
-    3300002: Ship
-    3300004: //RootNode
-    4300000: Wings
-    4300002: Ship
+    100000: //RootNode
+    400000: //RootNode
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: Cube
+    7400000: Default Take
+    9500000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
@@ -60,7 +51,7 @@ ModelImporter:
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
-    normalSmoothAngle: 0
+    normalSmoothAngle: 60
     splitTangentsAcrossUV: 1
     normalImportMode: 0
     tangentImportMode: 1
@@ -79,7 +70,7 @@ ModelImporter:
     rootMotionBoneName: 
     hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
