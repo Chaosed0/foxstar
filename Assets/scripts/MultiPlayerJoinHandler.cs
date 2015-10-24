@@ -13,6 +13,7 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
 
     public RectTransform minimap;
     public MinimapIcon[] minimapIcons;
+    public Material[] shieldMats;
 
     public bool spawnAI = true;
 
@@ -43,6 +44,15 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
         Vector3 elevatedPosition = position + new Vector3(0.0f, terrain.GetElevation(position.x, position.z) + 30.0f, 0.0f);
         Quaternion rotation = Quaternion.LookRotation(Vector3.zero - position, Vector3.up);
         Transform shipTransform = Instantiate(shipPrefab, elevatedPosition, rotation) as Transform;
+
+        /* Set the ship's shield material */
+        MeshRenderer mesh = shipTransform.Find("ShipModel").GetComponent<MeshRenderer>();
+        /* How do we know these numbers? WE JUST DO (look in the inspector) */
+        Material[] materials = mesh.materials;
+        materials[2] = shieldMats[playerNum];
+        materials[4] = shieldMats[playerNum];
+        materials[5] = shieldMats[playerNum];
+        mesh.materials = materials;
 
         return shipTransform;
     }
