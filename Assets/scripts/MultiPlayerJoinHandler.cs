@@ -14,6 +14,8 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
     public RectTransform minimap;
     public MinimapIcon[] minimapIcons;
 
+    public bool spawnAI = true;
+
     private int playerNum = 0;
     private int maxPlayers = 4;
     private PlayerJoinEventer eventer;
@@ -106,7 +108,7 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
             input.enabled = true;
         }
 
-        if (playerNum == 1) {
+        if (playerNum == 1 && spawnAI) {
             Transform AIShipTransform = CreateShip();
             CreateIcon(AIShipTransform);
             ShipRespawnHandler respawnHandler = AIShipTransform.GetComponent<ShipRespawnHandler>();
