@@ -15,6 +15,8 @@ public class SplitHelper {
         CENTER,
         LEFT,
         RIGHT,
+        TOP,
+        BOTTOM,
         TOP_LEFT,
         TOP_RIGHT,
         BOT_LEFT,
@@ -22,8 +24,8 @@ public class SplitHelper {
     }
 
     private SplitPair topLeft = null;
-    private SplitPair topRight = null;
     private SplitPair botLeft = null;
+    private SplitPair topRight = null;
     private SplitPair botRight = null;
 
     public void addCamera(Camera camera, HUD hud) {
@@ -34,17 +36,17 @@ public class SplitHelper {
 
         if (topLeft == null) {
             topLeft = pair;
-        } else if (topRight == null) {
-            topRight = pair;
-            SetOrientation(topLeft, SplitHelper.Orientation.LEFT);
-            SetOrientation(topRight, SplitHelper.Orientation.RIGHT);
         } else if (botLeft == null) {
             botLeft = pair;
+            SetOrientation(topLeft, SplitHelper.Orientation.TOP);
+            SetOrientation(botLeft, SplitHelper.Orientation.BOTTOM);
+        } else if (topRight == null) {
+            topRight = pair;
             SetOrientation(topLeft, SplitHelper.Orientation.TOP_LEFT);
-            SetOrientation(botLeft, SplitHelper.Orientation.BOT_LEFT);
+            SetOrientation(topRight, SplitHelper.Orientation.TOP_RIGHT);
         } else if (botRight == null) {
             botRight = pair;
-            SetOrientation(topRight, SplitHelper.Orientation.TOP_RIGHT);
+            SetOrientation(botLeft, SplitHelper.Orientation.BOT_LEFT);
             SetOrientation(botRight, SplitHelper.Orientation.BOT_RIGHT);
         } else {
             Debug.Log("WARNING: Too many cameras, SplitHelper only supports 4 cameras");
@@ -76,6 +78,12 @@ public class SplitHelper {
                 break;
             case Orientation.RIGHT:
                 pair.camera.rect = new Rect(0.5f, 0.0f, 0.5f, 1.0f);
+                break;
+            case Orientation.TOP:
+                pair.camera.rect = new Rect(0.0f, 0.0f, 1.0f, 0.5f);
+                break;
+            case Orientation.BOTTOM:
+                pair.camera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
                 break;
             case Orientation.TOP_LEFT:
                 pair.camera.rect = new Rect(0.0f, 0.5f, 0.5f, 0.5f);

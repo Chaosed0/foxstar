@@ -88,6 +88,7 @@ public class HUD : MonoBehaviour {
                 break;
             case SplitHelper.Orientation.LEFT:
             case SplitHelper.Orientation.TOP_LEFT:
+            case SplitHelper.Orientation.TOP:
                 anchor = new Vector2(0.0f, 0.0f);
                 position = new Vector2(margin, margin);
                 break;
@@ -96,6 +97,7 @@ public class HUD : MonoBehaviour {
                 position = new Vector2(-margin, -margin);
                 break;
             case SplitHelper.Orientation.BOT_LEFT:
+            case SplitHelper.Orientation.BOTTOM:
                 anchor = new Vector2(0.0f, 1.0f);
                 position = new Vector2(margin, -margin);
                 break;

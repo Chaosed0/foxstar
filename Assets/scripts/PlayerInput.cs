@@ -58,9 +58,9 @@ public class PlayerInput : MonoBehaviour {
             motor.Boost(false);
         }
 
-        throttle = Mathf.Sign(throttle) * Mathf.Clamp(throttle*throttle, -1.0f, 1.0f);
-        pitch = Mathf.Sign(pitch) * Mathf.Clamp(pitch*pitch, -1.0f, 1.0f);
-        roll = Mathf.Sign(roll) * Mathf.Clamp(roll*roll, -1.0f, 1.0f);
+        throttle = Mathf.Clamp(throttle + 1.0f, 0.0f, 1.0f);
+        pitch = Mathf.Clamp(pitch, -1.0f, 1.0f);
+        roll = Mathf.Clamp(roll, -1.0f, 1.0f);
         tightRoll = Mathf.Clamp(tightRoll, -1.0f, 1.0f);
 
         if (Mathf.Abs(roll) > Util.Epsilon &&

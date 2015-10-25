@@ -16,11 +16,12 @@ public class ShipMotor : MonoBehaviour {
     public float boostAcceleration = 30.0f;
     public float maxSpeed = 100.0f;
 
-    public float rotateTime = 0.1f;
+    public float pitchDampTime = 0.15f;
+    public float rollDampTime = 0.05f;
     public float yawSpeed = 60.0f;
 
-    public float maxPitchAngle = 30.0f;
-    public float smallRollAngle = 20.0f;
+    public float maxPitchAngle = 60.0f;
+    public float smallRollAngle = 50.0f;
     public float tightRollAngle = 90.0f;
 
     public float boostCooldownTime = 15.0f;
@@ -48,7 +49,9 @@ public class ShipMotor : MonoBehaviour {
     private bool wrapRotation = true;
     private float yawMultiplier = 1.0f;
     private Maneuvers currentManeuver = Maneuvers.NONE;
-    public float maneuverDirection = 0.0f;
+    private float maneuverDirection = 0.0f;
+
+    private bool oob = false;
 
     public delegate void StartBoost();
     public event StartBoost OnStartBoost;
@@ -91,22 +94,28 @@ public class ShipMotor : MonoBehaviour {
             OnStopManeuver();
         }
 
+        boostCooldownTimer = boostCooldownTime;
+        boostTimer = boostTime;
+        isBoosting = false;
+
         thrust = 0.0f;
         pitch = 0.0f;
         roll = 0.0f;
-        boostTimer = boostTime;
-        boostCooldownTimer = boostCooldownTime;
+        tightRoll = 0.0f;
+
         rotation = transform.rotation.eulerAngles;
         targetRotation = rotation;
 
-        currentManeuver = Maneuvers.NONE;
-        maneuverDirection = 0.0f;
         limitPitch = true;
         limitRoll = true;
         doYaw = true;
         wrapRotation = true;
+
         yawMultiplier = 1.0f;
         speed = 0.0f;
+
+        currentManeuver = Maneuvers.NONE;
+        maneuverDirection = 0.0f;
     }
 
     public bool IsBoosting() {
@@ -120,6 +129,7 @@ public class ShipMotor : MonoBehaviour {
     void FixedUpdate() {
         if (Mathf.Abs(transform.position.x) > 1200.0f ||
                 Mathf.Abs(transform.position.z) > 1200.0f) {
+            oob = true;
             SetManeuver(Maneuvers.IMMELMANN, -1.0f);
         }
 
@@ -156,41 +166,45 @@ public class ShipMotor : MonoBehaviour {
         }
 
         if (Mathf.Abs(pitch) > Util.Epsilon) {
-            /* In a roll, pitch controls yaw amount */
-            float lerp = Mathf.Abs(rotation.z) / 90.0f;
-            yawMultiplier = 1.0f - pitch * lerp;
-            targetRotation.x = (pitch * (1.0f - lerp)) * maxPitchAngle;
+            targetRotation.x = pitch * maxPitchAngle;
         } else {
             targetRotation.x = 0.0f;
         }
 
-        if (Mathf.Abs(tightRoll) > Util.Epsilon) {
-            targetRotation.z = tightRoll * tightRollAngle;
-        } else if (Mathf.Abs(roll) > Util.Epsilon) {
+        /* Importantly, this is checked before tight roll */
+        if (Mathf.Abs(roll) > Util.Epsilon) {
             targetRotation.z = roll * smallRollAngle;
+            yawMultiplier = Mathf.Abs(roll);
         } else {
             targetRotation.z = 0.0f;
+            yawMultiplier = 0.0f;
         }
 
+        if (Mathf.Abs(tightRoll) > Util.Epsilon) {
+            if (Mathf.Sign(tightRoll) != Mathf.Sign(roll)) {
+                yawMultiplier = 0.0f;
+            }
+            targetRotation.z = tightRoll * tightRollAngle;
+        }
+
+        Vector3 vel = Vector3.zero;
         if (doYaw) {
             rotation.y -= yawMultiplier * rotation.z / 90.0f * yawSpeed * Time.deltaTime;
             yawMultiplier = 1.0f;
+        } else if (oob) {
+            rotation.y = Mathf.SmoothDamp(rotation.y, targetRotation.y, ref vel.y, pitchDampTime);
         }
 
-        float drag = dragCoefficient * speed * speed;
-        speed -= drag * Time.deltaTime;
-
-        Vector3 vel = Vector3.zero;
         if (limitPitch) {
-            rotation.x = Mathf.SmoothDamp(rotation.x, targetRotation.x, ref vel.x, rotateTime);
+            rotation.x = Mathf.SmoothDamp(rotation.x, targetRotation.x, ref vel.x, pitchDampTime);
         } else {
-            rotation.x += targetRotation.x / (maxPitchAngle * rotateTime);
+            rotation.x += targetRotation.x / (maxPitchAngle * pitchDampTime);
         }
 
         if (limitRoll) {
-            rotation.z = Mathf.SmoothDamp(rotation.z, targetRotation.z, ref vel.z, rotateTime);
+            rotation.z = Mathf.SmoothDamp(rotation.z, targetRotation.z, ref vel.z, rollDampTime);
         } else {
-            rotation.z += targetRotation.z / (smallRollAngle * rotateTime);
+            rotation.z += targetRotation.z / (smallRollAngle * rollDampTime);
         }
 
         if (wrapRotation) {
@@ -199,6 +213,8 @@ public class ShipMotor : MonoBehaviour {
             rotation.z = rotation.z % 360;
         }
 
+        float drag = dragCoefficient * speed * speed;
+        speed -= drag * Time.deltaTime;
         /* Don't allow backing up */
         speed = Mathf.Max(0.0f, speed);
 
@@ -274,6 +290,7 @@ public class ShipMotor : MonoBehaviour {
 
     public bool Immelmann(float direction) {
         doYaw = false;
+        targetRotation.y = rotation.y;
         if (Mathf.Abs(rotation.x) < 180.0f) {
             /* Pitch until we reach the apex */
             limitPitch = false;
@@ -285,12 +302,32 @@ public class ShipMotor : MonoBehaviour {
             limitRoll = false;
             SetMovement(1.0f, 0.0f, direction/3.0f, 0.0f);
         } else {
+            if (oob == true) {
+                /* If we're about to end an immelmann we did out-of-bounds back
+                 * out-of-bounds, cheat - it's better than getting stuck
+                 * forever */
+                if (transform.position.x > 1200.0f) {
+                    targetRotation.y = 90.0f;
+                    return false;
+                } else if (transform.position.x < -1200.0f) {
+                    targetRotation.y = 270.0f;
+                    return false;
+                } else if (transform.position.z > 1200.0f) {
+                    targetRotation.y = 0.0f;
+                    return false;
+                } else if (transform.position.z < -1200.0f) {
+                    targetRotation.y = 180.0f;
+                    return false;
+                }
+            }
+
             rotation.x = -rotation.x % 180.0f;
             rotation.y = (rotation.y + 180.0f) % 360;
             rotation.z = -rotation.z % 180.0f;
             limitPitch = true;
             limitRoll = true;
             doYaw = true;
+            oob = false;
             return true;
         }
         return false;
