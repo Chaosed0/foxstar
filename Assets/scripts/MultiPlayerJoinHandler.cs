@@ -54,6 +54,12 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
         materials[5] = shieldMats[playerNum];
         mesh.materials = materials;
 
+        /* Put the crosses into their own layer so they aren't rendered on other cameras */
+        Transform cross1 = shipTransform.Find("cross1");
+        Transform cross2 = shipTransform.Find("cross2");
+        cross1.gameObject.layer = 28 + playerNum;
+        cross2.gameObject.layer = 28 + playerNum;
+
         return shipTransform;
     }
 
@@ -97,11 +103,7 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
         Camera camera = cameraTransform.GetComponent<Camera>();
         splitHelper.addCamera(camera, hud);
         /* Only render the player's own reticles */
-        for (int i = 28; i < 32; i++) {
-            if (playerNum != i) {
-                camera.cullingMask = camera.cullingMask ^ (1 << (28 + playerNum));
-            }
-        }
+        camera.cullingMask = camera.cullingMask | (1 << (28 + playerNum));
 
         /* Initialize the PlayerInput and disable it until everyone's ready */
         PlayerInput input = shipTransform.GetComponent<PlayerInput>();

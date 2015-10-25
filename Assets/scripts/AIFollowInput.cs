@@ -26,7 +26,7 @@ public class AIFollowInput : MonoBehaviour {
             pitch = -1.0f;
         }
 
-        //motor.SetMovement(throttle, pitch, 0.0f, 0.0f);
+        motor.SetMovement(throttle, pitch, 0.0f, 0.0f);
         cannon.setFiring(true);
 	}
 }

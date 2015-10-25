@@ -68,11 +68,6 @@ public class PlayerInput : MonoBehaviour {
             roll += tightRoll;
         }
 
-        if (cannon.isFiring()) {
-            pitch /= 2.0f;
-            roll /= 2.0f;
-        }
-
         motor.SetMovement(throttle, pitch, roll, tightRoll);
 
         if (startFire) {

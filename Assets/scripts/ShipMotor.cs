@@ -42,7 +42,8 @@ public class ShipMotor : MonoBehaviour {
     private float dragCoefficient = 0.2f;
     private float speed = 0.0f;
 
-    private bool limitRotation = true;
+    private bool limitPitch = true;
+    private bool limitRoll = true;
     private bool doYaw = true;
     private bool wrapRotation = true;
     private float yawMultiplier = 1.0f;
@@ -100,7 +101,8 @@ public class ShipMotor : MonoBehaviour {
 
         currentManeuver = Maneuvers.NONE;
         maneuverDirection = 0.0f;
-        limitRotation = true;
+        limitPitch = true;
+        limitRoll = true;
         doYaw = true;
         wrapRotation = true;
         yawMultiplier = 1.0f;
@@ -178,12 +180,16 @@ public class ShipMotor : MonoBehaviour {
         float drag = dragCoefficient * speed * speed;
         speed -= drag * Time.deltaTime;
 
-        if (limitRotation) {
-            Vector3 vel = Vector3.zero;
+        Vector3 vel = Vector3.zero;
+        if (limitPitch) {
             rotation.x = Mathf.SmoothDamp(rotation.x, targetRotation.x, ref vel.x, rotateTime);
-            rotation.z = Mathf.SmoothDamp(rotation.z, targetRotation.z, ref vel.z, rotateTime);
         } else {
             rotation.x += targetRotation.x / (maxPitchAngle * rotateTime);
+        }
+
+        if (limitRoll) {
+            rotation.z = Mathf.SmoothDamp(rotation.z, targetRotation.z, ref vel.z, rotateTime);
+        } else {
             rotation.z += targetRotation.z / (smallRollAngle * rotateTime);
         }
 
@@ -251,14 +257,14 @@ public class ShipMotor : MonoBehaviour {
     }
 
     public bool Somersault(float direction) {
-        limitRotation = false;
+        limitPitch = false;
         wrapRotation = false;
         doYaw = false;
         if (Mathf.Abs(rotation.x) < 360.0f) {
             SetMovement(1.0f, direction/2.0f, 0.0f, 0.0f);
         } else {
             rotation.x = rotation.x % 360.0f;
-            limitRotation = true;
+            limitPitch = true;
             doYaw = true;
             wrapRotation = true;
             return true;
@@ -267,19 +273,23 @@ public class ShipMotor : MonoBehaviour {
     }
 
     public bool Immelmann(float direction) {
-        limitRotation = false;
         doYaw = false;
         if (Mathf.Abs(rotation.x) < 180.0f) {
             /* Pitch until we reach the apex */
+            limitPitch = false;
+            limitRoll = true;
             SetMovement(1.0f, direction/3.0f, 0.0f, 0.0f);
         } else if (Mathf.Abs(rotation.z) < 180.0f) {
             /* Roll until we're upright again */
+            limitPitch = false;
+            limitRoll = false;
             SetMovement(1.0f, 0.0f, direction/3.0f, 0.0f);
         } else {
             rotation.x = -rotation.x % 180.0f;
             rotation.y = (rotation.y + 180.0f) % 360;
             rotation.z = -rotation.z % 180.0f;
-            limitRotation = true;
+            limitPitch = true;
+            limitRoll = true;
             doYaw = true;
             return true;
         }

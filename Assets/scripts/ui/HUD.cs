@@ -9,6 +9,11 @@ public class HUD : MonoBehaviour {
     public Slider boostSlider;
     public float margin = 10.0f;
     public float boostMargin = 16.4f;
+
+    public float minIconDistance = 100.0f;
+    public float maxIconDistance = 2400.0f;
+    public float minIconSize = 8.0f;
+    public float maxIconSize = 24.0f;
     public RectTransform playerIconPrefab;
 
     private ShipMotor motor;
@@ -47,10 +52,17 @@ public class HUD : MonoBehaviour {
         for (int i = 0; i < players.Count; i++) {
             Transform player = players[i].transform;
             Vector3 position = camera.WorldToViewportPoint(player.position);
-            Vector2 hudPosition = new Vector2(position.x*rectTransform.sizeDelta.x, position.y*rectTransform.sizeDelta.y);
 
-            Debug.Log(hudPosition);
-            playerIcons[i].anchoredPosition = hudPosition;
+            if (position.z > 0) {
+                Vector2 hudPosition = new Vector2(position.x*rectTransform.sizeDelta.x, position.y*rectTransform.sizeDelta.y);
+                float size = (1.0f - Mathf.Clamp((position.z - minIconDistance) / (maxIconDistance - minIconDistance), 0.0f, 1.0f)) *
+                    (maxIconSize - minIconSize) + minIconSize;
+                playerIcons[i].anchoredPosition = hudPosition;
+                playerIcons[i].sizeDelta = new Vector2(size, size);
+            } else {
+                /* offscreen */
+                playerIcons[i].anchoredPosition = new Vector2(-100.0f, -100.0f);
+            }
         }
     }
 
