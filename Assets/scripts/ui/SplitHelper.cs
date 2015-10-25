@@ -51,6 +51,21 @@ public class SplitHelper {
         }
     }
 
+    public void Finish() {
+        if (topLeft != null) {
+            topLeft.hud.Finish();
+        }
+        if (topRight != null) {
+            topRight.hud.Finish();
+        }
+        if (botLeft != null) {
+            botLeft.hud.Finish();
+        }
+        if (botRight != null) {
+            botRight.hud.Finish();
+        }
+    }
+
     private void SetOrientation(SplitPair pair, Orientation orientation) {
         switch (orientation) {
             case Orientation.CENTER:

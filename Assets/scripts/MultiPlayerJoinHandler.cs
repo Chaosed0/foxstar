@@ -61,7 +61,7 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
         /* Add a minimap icon for this ship */
         MinimapIcon icon = Instantiate(minimapIcons[playerNum], Vector3.zero, Quaternion.identity) as MinimapIcon;
         icon.followTransform = shipTransform;
-        icon.worldSize = new Vector2(2000.0f, 2000.0f);
+        icon.worldSize = new Vector2(1200.0f, 1200.0f);
         icon.transform.SetParent(minimap.transform);
 
         return icon;
@@ -97,7 +97,11 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
         Camera camera = cameraTransform.GetComponent<Camera>();
         splitHelper.addCamera(camera, hud);
         /* Only render the player's own reticles */
-        camera.cullingMask = camera.cullingMask | (1 << (28 + playerNum));
+        for (int i = 28; i < 32; i++) {
+            if (playerNum != i) {
+                camera.cullingMask = camera.cullingMask ^ (1 << (28 + playerNum));
+            }
+        }
 
         /* Initialize the PlayerInput and disable it until everyone's ready */
         PlayerInput input = shipTransform.GetComponent<PlayerInput>();
@@ -127,6 +131,7 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
             AIShipTransform.gameObject.AddComponent<AIFollowInput>();
         }
 
+        splitHelper.Finish();
         hideOnReady.alpha = 0.0f;
     }
 }

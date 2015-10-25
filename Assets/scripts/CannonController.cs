@@ -22,6 +22,10 @@ public class CannonController : MonoBehaviour {
         this.firing = firing;
     }
 
+    public bool isFiring() {
+        return this.firing;
+    }
+
     void Update() {
         if (cooldownTimer < cooldown) {
             cooldownTimer += Time.deltaTime;

@@ -116,8 +116,8 @@ public class ShipMotor : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        if (Mathf.Abs(transform.position.x) > 2000.0f ||
-                Mathf.Abs(transform.position.z) > 2000.0f) {
+        if (Mathf.Abs(transform.position.x) > 1200.0f ||
+                Mathf.Abs(transform.position.z) > 1200.0f) {
             SetManeuver(Maneuvers.IMMELMANN, -1.0f);
         }
 
