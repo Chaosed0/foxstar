@@ -15,7 +15,7 @@ public class PlayerInput : MonoBehaviour {
 	}
 
 	private void Update () {
-        float throttle = InputManager.GetAxis(controllerPrefix + "Throttle");
+        float brake = InputManager.GetAxis(controllerPrefix + "Brake");
         float pitch = InputManager.GetAxis(controllerPrefix + "Pitch");
         float roll = InputManager.GetAxis(controllerPrefix + "Roll");
         float tightRoll = InputManager.GetAxis(controllerPrefix + "TightRoll");
@@ -26,7 +26,8 @@ public class PlayerInput : MonoBehaviour {
         bool stopBoost = (bool)InputManager.GetButtonUp(controllerPrefix + "Boost");
 
         bool maneuver1 = (bool)InputManager.GetButtonDown(controllerPrefix + "Maneuver1");
-        bool maneuver2 = (bool)InputManager.GetButtonDown(controllerPrefix + "Maneuver2");
+        bool maneuver2 = false;
+        //bool maneuver2 = (bool)InputManager.GetButtonDown(controllerPrefix + "Maneuver2");
 
         float pitchMag = Mathf.Abs(pitch);
         float rollMag = Mathf.Abs(roll);
@@ -58,7 +59,7 @@ public class PlayerInput : MonoBehaviour {
             motor.Boost(false);
         }
 
-        throttle = Mathf.Clamp(throttle + 1.0f, 0.0f, 1.0f);
+        float throttle = 1.0f - Mathf.Clamp(brake, 0.0f, 1.0f);
         pitch = Mathf.Clamp(pitch, -1.0f, 1.0f);
         roll = Mathf.Clamp(roll, -1.0f, 1.0f);
         tightRoll = Mathf.Clamp(tightRoll, -1.0f, 1.0f);
