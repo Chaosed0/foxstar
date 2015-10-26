@@ -25,23 +25,18 @@ public class PlayerInput : MonoBehaviour {
         bool startBoost = (bool)InputManager.GetButtonDown(controllerPrefix + "Boost");
         bool stopBoost = (bool)InputManager.GetButtonUp(controllerPrefix + "Boost");
 
-        bool maneuver1 = (bool)InputManager.GetButtonDown(controllerPrefix + "Maneuver1");
-        bool maneuver2 = false;
+        bool maneuver = (bool)InputManager.GetButtonDown(controllerPrefix + "Maneuver1");
         //bool maneuver2 = (bool)InputManager.GetButtonDown(controllerPrefix + "Maneuver2");
 
-        float pitchMag = Mathf.Abs(pitch);
-        float rollMag = Mathf.Abs(roll);
-        if (maneuver1) {
-            if (pitchMag > rollMag && pitchMag > Util.Epsilon) {
-                motor.SetManeuver(ShipMotor.Maneuvers.IMMELMANN, pitch);
-            } else if (rollMag > pitchMag && rollMag > Util.Epsilon) {
+        if (maneuver) {
+            if (Mathf.Abs(pitch) > Mathf.Abs(roll)) {
+                if (pitch > Util.Epsilon) {
+                    motor.SetManeuver(ShipMotor.Maneuvers.IMMELMANN, -1.0f);
+                } else {
+                    motor.SetManeuver(ShipMotor.Maneuvers.SOMERSAULT, -1.0f);
+                }
+            } else {
                 motor.SetManeuver(ShipMotor.Maneuvers.BARRELROLL, roll);
-            }
-        } else if (maneuver2) {
-            if (pitchMag > rollMag && pitchMag > Util.Epsilon) {
-                motor.SetManeuver(ShipMotor.Maneuvers.SOMERSAULT, pitch);
-            } else if (rollMag > pitchMag && rollMag > Util.Epsilon) {
-                motor.SetManeuver(ShipMotor.Maneuvers.DODGE, roll);
             }
         }
 
