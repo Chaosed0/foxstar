@@ -30,6 +30,8 @@ public class TerrainGenerator : MonoBehaviour {
     public DetailGroup[] detailGroups;
 
     private Vector3[,] sharedVertices;
+    private float minHeight = System.Int32.MaxValue;
+    private float maxHeight = System.Int32.MinValue;
 
     /*private Texture2D noiseTex;
     private Color[][] octavePixels;*/
@@ -96,7 +98,7 @@ public class TerrainGenerator : MonoBehaviour {
 
         for (int y = 0; y < ysize; y++) {
             for (int x = 0; x < xsize; x++) {
-                float elevation = 0;
+                float elevation = 0.0f;
                 float amplitude = Mathf.Pow(persistence, octaves);
                 float frequency = 1.0f;
                 float maxVal = 0.0f;
@@ -108,10 +110,37 @@ public class TerrainGenerator : MonoBehaviour {
                     amplitude /= persistence;
                     frequency *= frequencyBase;
                 }
+
+                elevation = elevation / maxVal * zscale;
                 //octavePixels[octaves][y * xsize + x] = new Color(elevation / maxVal, elevation / maxVal, elevation / maxVal);
-                sharedVertices[y,x] = new Vector3((x + Random.Range(-xPerturb, xPerturb)) * xscale, elevation / maxVal * zscale, (y + Random.Range(-yPerturb, yPerturb)) * yscale);
+                sharedVertices[y,x] = new Vector3((x + Random.Range(-xPerturb, xPerturb)) * xscale, elevation, (y + Random.Range(-yPerturb, yPerturb)) * yscale);
+
+                if (elevation < minHeight) {
+                    minHeight = elevation;
+                }
+                if (elevation > maxHeight) {
+                    maxHeight = elevation;
+                }
             }
         }
+
+        for (int y = 0; y < ysize; y++) {
+            for (int x = 0; x < xsize; x++) {
+                /* Set the minimum height to 0 */
+                sharedVertices[y,x].y = sharedVertices[y,x].y - minHeight;
+
+                /* Make features more exaggerated as we reach the edge of the map */
+                Vector2 offset = new Vector2(Mathf.Abs(x - xsize/2.0f), Mathf.Abs(y - ysize/2.0f));
+                float mp = (offset.x > offset.y ? offset.x : offset.y);
+                float ms = (offset.x > offset.y ? xsize/2.0f : ysize/2.0f);
+                sharedVertices[y,x].y = sharedVertices[y,x].y * (1.0f + 2.0f * (mp * mp) / (ms * ms));
+
+                if (sharedVertices[y,x].y > maxHeight) {
+                    maxHeight = sharedVertices[y,x].y;
+                }
+            }
+        }
+        minHeight = 0.0f;
 
         /*for (int i = 0; i < octaves+1; i++) {
             Texture2D noiseTex = new Texture2D(xsize, ysize);

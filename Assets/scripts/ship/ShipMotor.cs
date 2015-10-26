@@ -28,6 +28,8 @@ public class ShipMotor : MonoBehaviour {
     public float boostTime = 2.0f;
     public float boostRefillFactor = 2.0f;
 
+    public float maxHeight = 1000.0f;
+
     private float boostCooldownTimer = 15.0f;
     private float boostTimer = 2.0f;
     private bool isBoosting = false;
@@ -127,8 +129,8 @@ public class ShipMotor : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        if (Mathf.Abs(transform.position.x) > 1200.0f ||
-                Mathf.Abs(transform.position.z) > 1200.0f) {
+        if (Mathf.Abs(transform.position.x) > Constants.worldSize ||
+                Mathf.Abs(transform.position.z) > Constants.worldSize) {
             oob = true;
             SetManeuver(Maneuvers.IMMELMANN, -1.0f);
         }
@@ -165,7 +167,9 @@ public class ShipMotor : MonoBehaviour {
             speed += acceleration * thrust * Time.deltaTime;
         }
 
+        /* Don't allow pitching up if the player is at maximum height */
         if (Mathf.Abs(pitch) > Util.Epsilon) {
+                //(pitch > 0 || transform.position.y < maxHeight)) {
             targetRotation.x = pitch * maxPitchAngle;
         } else {
             targetRotation.x = 0.0f;
@@ -306,16 +310,16 @@ public class ShipMotor : MonoBehaviour {
                 /* If we're about to end an immelmann we did out-of-bounds back
                  * out-of-bounds, cheat - it's better than getting stuck
                  * forever */
-                if (transform.position.x > 1200.0f) {
+                if (transform.position.x > Constants.worldSize) {
                     targetRotation.y = 90.0f;
                     return false;
-                } else if (transform.position.x < -1200.0f) {
+                } else if (transform.position.x < -Constants.worldSize) {
                     targetRotation.y = 270.0f;
                     return false;
-                } else if (transform.position.z > 1200.0f) {
+                } else if (transform.position.z > Constants.worldSize) {
                     targetRotation.y = 0.0f;
                     return false;
-                } else if (transform.position.z < -1200.0f) {
+                } else if (transform.position.z < -Constants.worldSize) {
                     targetRotation.y = 180.0f;
                     return false;
                 }

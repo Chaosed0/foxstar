@@ -24,10 +24,10 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
     private SplitHelper splitHelper;
 
     private Vector3[] initialShipPositions = {
-        new Vector3(1000.0f, 0.0f, 1000.0f),
-        new Vector3(-1000.0f, 0.0f, -1000.0f),
-        new Vector3(1000.0f, 0.0f, -1000.0f),
-        new Vector3(-1000.0f, 0.0f, 1000.0f),
+        new Vector3(Constants.worldSize/2.0f, 0.0f, Constants.worldSize/2.0f),
+        new Vector3(-Constants.worldSize/2.0f, 0.0f, -Constants.worldSize/2.0f),
+        new Vector3(Constants.worldSize/2.0f, 0.0f, -Constants.worldSize/2.0f),
+        new Vector3(-Constants.worldSize/2.0f, 0.0f, Constants.worldSize/2.0f),
     };
 
 	void Start() {
@@ -67,7 +67,7 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
         /* Add a minimap icon for this ship */
         MinimapIcon icon = Instantiate(minimapIcons[playerNum], Vector3.zero, Quaternion.identity) as MinimapIcon;
         icon.followTransform = shipTransform;
-        icon.worldSize = new Vector2(1200.0f, 1200.0f);
+        icon.worldSize = new Vector2(Constants.worldSize, Constants.worldSize);
         icon.transform.SetParent(minimap.transform);
 
         return icon;
