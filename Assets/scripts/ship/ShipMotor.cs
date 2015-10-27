@@ -346,16 +346,16 @@ public class ShipMotor : MonoBehaviour {
                  * back out-of-bounds, cheat - it's better than getting stuck
                  * forever */
                 if (transform.position.x > Constants.worldSize) {
-                    targetRotation.y = 90.0f;
-                    returnEarly = true;
-                } else if (transform.position.x < -Constants.worldSize) {
                     targetRotation.y = 270.0f;
                     returnEarly = true;
+                } else if (transform.position.x < -Constants.worldSize) {
+                    targetRotation.y = 90.0f;
+                    returnEarly = true;
                 } else if (transform.position.z > Constants.worldSize) {
-                    targetRotation.y = 0.0f;
+                    targetRotation.y = 180.0f;
                     returnEarly = true;
                 } else if (transform.position.z < -Constants.worldSize) {
-                    targetRotation.y = 180.0f;
+                    targetRotation.y = 0.0f;
                     returnEarly = true;
                 }
             }
