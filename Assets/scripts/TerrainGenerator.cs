@@ -52,6 +52,26 @@ public class TerrainGenerator : MonoBehaviour {
         GenerateDetailMeshes();
     }
 
+    public float GetMaxHeightIn(Vector2 bounds) {
+        bounds = bounds / xscale;
+        int startx = -(int)Mathf.Floor(bounds.x);
+        int endx = (int)Mathf.Ceil(bounds.x);
+        int starty = -(int)Mathf.Floor(bounds.y);
+        int endy = (int)Mathf.Ceil(bounds.y);
+        float max = System.Int32.MinValue;
+
+        for (int y = starty; y < endy; y++) {
+            for (int x = startx; x < endx; x++) {
+                float elevation = GetElevation(x, y);
+                if (elevation > max) {
+                    max = elevation;
+                }
+            }
+        }
+
+        return max;
+    }
+
     /* Returns a rough approximation of the height at a given point in worldspace */
     public float GetElevation(float x, float y) {
         if (x < -xsize/2.0f * xscale || x > xsize/2.0f * xscale ||

@@ -15,6 +15,7 @@ public class ShipMotor : MonoBehaviour {
     public float acceleration = 10.0f;
     public float boostAcceleration = 30.0f;
     public float maxSpeed = 100.0f;
+    public float maxHeight = 800.0f;
 
     public float pitchDampTime = 0.15f;
     public float rollDampTime = 0.05f;
@@ -27,8 +28,6 @@ public class ShipMotor : MonoBehaviour {
     public float boostCooldownTime = 15.0f;
     public float boostTime = 2.0f;
     public float boostRefillFactor = 2.0f;
-
-    public float maxHeight = 1000.0f;
 
     private float boostCooldownTimer = 15.0f;
     private float boostTimer = 2.0f;
@@ -53,7 +52,11 @@ public class ShipMotor : MonoBehaviour {
     private Maneuvers currentManeuver = Maneuvers.NONE;
     private float maneuverDirection = 0.0f;
 
+    /* Immelmann state */
     private bool oob = false;
+    private bool apex = false;
+    private bool righted = false;
+    private bool finished = false;
 
     public delegate void StartBoost();
     public event StartBoost OnStartBoost;
@@ -168,8 +171,15 @@ public class ShipMotor : MonoBehaviour {
         }
 
         /* Don't allow pitching up if the player is at maximum height */
+        if (!IsManeuvering() && pitch <= -Util.Epsilon &&
+                transform.position.y > maxHeight) {
+            pitch = 0.0f;
+            Vector3 pos = transform.position;
+            pos.y = maxHeight;
+            transform.position = pos;
+        }
+
         if (Mathf.Abs(pitch) > Util.Epsilon) {
-                //(pitch > 0 || transform.position.y < maxHeight)) {
             targetRotation.x = pitch * maxPitchAngle;
         } else {
             targetRotation.x = 0.0f;
@@ -195,7 +205,7 @@ public class ShipMotor : MonoBehaviour {
         if (doYaw) {
             rotation.y -= yawMultiplier * rotation.z / 90.0f * yawSpeed * Time.deltaTime;
             yawMultiplier = 1.0f;
-        } else if (oob) {
+        } else if (oob == true) {
             rotation.y = Mathf.SmoothDamp(rotation.y, targetRotation.y, ref vel.y, pitchDampTime);
         }
 
@@ -295,43 +305,72 @@ public class ShipMotor : MonoBehaviour {
     public bool Immelmann(float direction) {
         doYaw = false;
         targetRotation.y = rotation.y;
-        if (Mathf.Abs(rotation.x) < 180.0f) {
+        if (!apex) {
             /* Pitch until we reach the apex */
             limitPitch = false;
             limitRoll = true;
             SetMovement(1.0f, direction/3.0f, 0.0f, 0.0f);
-        } else if (Mathf.Abs(rotation.z) < 180.0f) {
+            if (Mathf.Abs(rotation.x) >= 180.0f) {
+                rotation.x = 180.0f;
+                apex = true;
+            }
+        } else if (!righted) {
             /* Roll until we're upright again */
             limitPitch = false;
             limitRoll = false;
             SetMovement(1.0f, 0.0f, direction/3.0f, 0.0f);
+            if (Mathf.Abs(rotation.z) >= 180.0f) {
+                rotation.z = 180.0f;
+                righted = true;
+            }
         } else {
-            if (oob == true) {
-                /* If we're about to end an immelmann we did out-of-bounds back
-                 * out-of-bounds, cheat - it's better than getting stuck
+            if (!finished) {
+                rotation.x = 0.0f;
+                rotation.y = (rotation.y + 180.0f) % 360;
+                rotation.z = 0.0f;
+                finished = true;
+            }
+
+            bool returnEarly = false;
+            if (transform.position.y > maxHeight) {
+                /* If we're about to end an immelmann above max height, pitch
+                 * downwards until we reach max height */
+                limitPitch = true;
+                limitRoll = true;
+                SetMovement(1.0f, 1.0f, 0.0f, 0.0f);
+                returnEarly = true;
+            }
+
+            if (oob) {
+                /* If we're about to end an immelmann we started out-of-bounds
+                 * back out-of-bounds, cheat - it's better than getting stuck
                  * forever */
                 if (transform.position.x > Constants.worldSize) {
                     targetRotation.y = 90.0f;
-                    return false;
+                    returnEarly = true;
                 } else if (transform.position.x < -Constants.worldSize) {
                     targetRotation.y = 270.0f;
-                    return false;
+                    returnEarly = true;
                 } else if (transform.position.z > Constants.worldSize) {
                     targetRotation.y = 0.0f;
-                    return false;
+                    returnEarly = true;
                 } else if (transform.position.z < -Constants.worldSize) {
                     targetRotation.y = 180.0f;
-                    return false;
+                    returnEarly = true;
                 }
             }
 
-            rotation.x = -rotation.x % 180.0f;
-            rotation.y = (rotation.y + 180.0f) % 360;
-            rotation.z = -rotation.z % 180.0f;
+            if (returnEarly) {
+                return false;
+            }
+
             limitPitch = true;
             limitRoll = true;
             doYaw = true;
             oob = false;
+            apex = false;
+            righted = false;
+            finished = false;
             return true;
         }
         return false;

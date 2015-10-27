@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System;
 
 public class MultiPlayerJoinHandler: MonoBehaviour {
     public Camera initialCamera;
@@ -19,6 +20,7 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
 
     private int playerNum = 0;
     private int maxPlayers = 4;
+    private float maxHeight = Int32.MinValue;
     private PlayerJoinEventer eventer;
     private PlayerInput[] inputs;
     private SplitHelper splitHelper;
@@ -39,6 +41,12 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
 	}
 
     Transform CreateShip() {
+        if (maxHeight == Int32.MinValue) {
+            maxHeight = terrain.GetMaxHeightIn(new Vector2(Constants.worldSize, Constants.worldSize)) +
+                Constants.minimumFlyableSpace;
+            Debug.Log(maxHeight);
+        }
+
         /* Create a ship for this player */
         Vector3 position = initialShipPositions[playerNum];
         Vector3 elevatedPosition = position + new Vector3(0.0f, terrain.GetElevation(position.x, position.z) + 30.0f, 0.0f);
@@ -59,6 +67,9 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
         Transform cross2 = shipTransform.Find("cross2");
         cross1.gameObject.layer = 28 + playerNum;
         cross2.gameObject.layer = 28 + playerNum;
+
+        /* Set the ship's maximum flyable height */
+        shipTransform.GetComponent<ShipMotor>().maxHeight = maxHeight;
 
         return shipTransform;
     }
