@@ -20,7 +20,7 @@ public class HUD : MonoBehaviour {
     private Canvas canvas;
     private RectTransform rectTransform;
     private List<RectTransform> playerIcons = new List<RectTransform>();
-    private List<Transform> players = new List<Transform>();
+    private List<Ship> players = new List<Ship>();
 
 	void Start () {
         motor = ship.GetComponent<ShipMotor>();
@@ -33,8 +33,9 @@ public class HUD : MonoBehaviour {
     public void Finish() {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         for (int i = 0; i < players.Length; i++) {
-            if (players[i].GetComponent<Ship>() != ship) {
-                this.players.Add(players[i].transform);
+            Ship ship = players[i].GetComponent<Ship>();
+            if (ship != this.ship) {
+                this.players.Add(ship);
 
                 RectTransform icon = Instantiate(playerIconPrefab, Vector3.zero, Quaternion.identity) as RectTransform;
                 icon.SetParent(this.transform);
@@ -50,10 +51,10 @@ public class HUD : MonoBehaviour {
         Camera camera = canvas.worldCamera;
 
         for (int i = 0; i < players.Count; i++) {
-            Transform player = players[i].transform;
-            Vector3 position = camera.WorldToViewportPoint(player.position);
+            Ship player = players[i];
+            Vector3 position = camera.WorldToViewportPoint(player.transform.position);
 
-            if (position.z > 0) {
+            if (position.z > 0 && !player.IsDead()) {
                 Vector2 hudPosition = new Vector2(position.x*rectTransform.sizeDelta.x, position.y*rectTransform.sizeDelta.y);
                 float size = (1.0f - Mathf.Clamp((position.z - minIconDistance) / (maxIconDistance - minIconDistance), 0.0f, 1.0f)) *
                     (maxIconSize - minIconSize) + minIconSize;

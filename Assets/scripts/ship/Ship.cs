@@ -13,6 +13,9 @@ public class Ship : MonoBehaviour {
     public delegate void Dead();
     public event Dead OnDead;
 
+    public delegate void Respawn();
+    public event Respawn OnRespawn;
+
 	void Start () {
         health = maxHealth;
         motor = GetComponent<ShipMotor>();
@@ -27,6 +30,13 @@ public class Ship : MonoBehaviour {
         if (OnHealthChange != null) {
             OnHealthChange(health, 0);
         }
+        if (OnRespawn != null) {
+            OnRespawn();
+        }
+    }
+
+    public bool IsDead() {
+        return health <= 0;
     }
 
     void OnCollisionEnter(Collision collision) {

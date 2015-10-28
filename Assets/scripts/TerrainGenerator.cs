@@ -76,7 +76,6 @@ public class TerrainGenerator : MonoBehaviour {
     public float GetElevation(float x, float y) {
         if (x < -xsize/2.0f * xscale || x > xsize/2.0f * xscale ||
                 y < -ysize/2.0f * yscale || y > ysize/2.0f * yscale) {
-            Debug.Log("Worldspace " + x + "," + y + " out of terrain bounds");
             return 0.0f;
         }
 

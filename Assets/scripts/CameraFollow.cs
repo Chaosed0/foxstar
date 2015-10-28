@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class CameraFollow : MonoBehaviour {
-    public ShipMotor ship;
+    public Ship ship;
     public Transform followPoint;
     public Transform lookAt;
     public float thrustSmoothing = 0.1f;
@@ -10,6 +10,7 @@ public class CameraFollow : MonoBehaviour {
     public float rollDamping = 0.1f;
     public float boostFovFactor = 0.8f;
 
+    private ShipMotor motor;
     private new Camera camera;
     private Vector3 velocity = Vector3.zero;
     private Vector3 upVelocity = Vector3.zero;
@@ -23,10 +24,14 @@ public class CameraFollow : MonoBehaviour {
     void Start() {
         camera = GetComponent<Camera>();
         curRollDamping = rollDamping;
-        ship.OnStartManeuver += OnStartManeuver;
-        ship.OnStopManeuver += OnStopManeuver;
-        ship.OnStartBoost += OnStartBoost;
-        ship.OnStopBoost += OnStopBoost;
+
+        motor = ship.GetComponent<ShipMotor>();
+        motor.OnStartManeuver += OnStartManeuver;
+        motor.OnStopManeuver += OnStopManeuver;
+        motor.OnStartBoost += OnStartBoost;
+        motor.OnStopBoost += OnStopBoost;
+
+        ship.OnRespawn += OnRespawn;
 
         normalFov = camera.fieldOfView;
         boostFov = normalFov * boostFovFactor;
@@ -49,6 +54,11 @@ public class CameraFollow : MonoBehaviour {
         fovTarget = normalFov;
     }
 
+    void OnRespawn() {
+        transform.position = ship.transform.position;
+        transform.rotation = ship.transform.rotation;
+    }
+
     Quaternion smoothDampQuat(Quaternion current, Quaternion target, float smoothTime) {
         float angle = Quaternion.Angle(transform.rotation, target);
         float newAngle = Mathf.SmoothDamp(angle, 0.0f, ref angVel, smoothTime);
@@ -60,9 +70,13 @@ public class CameraFollow : MonoBehaviour {
     }
 
     void FixedUpdate() {
+        if (ship.IsDead()) {
+            return;
+        }
+
         transform.position = Vector3.SmoothDamp(transform.position, followPoint.position, ref velocity, thrustSmoothing);
 
-        Vector3 shipRotation = ship.getCurrentRotation();
+        Vector3 shipRotation = motor.getCurrentRotation();
         Vector3 targetUp = Quaternion.Euler(shipRotation.x, shipRotation.y, shipRotation.z * curRollDamping) * Vector3.up;
 
         Vector3 up = Vector3.SmoothDamp(transform.up, targetUp, ref upVelocity, rotationalSmoothing);

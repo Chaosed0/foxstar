@@ -44,7 +44,6 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
         if (maxHeight == Int32.MinValue) {
             maxHeight = terrain.GetMaxHeightIn(new Vector2(Constants.worldSize, Constants.worldSize)) +
                 Constants.minimumFlyableSpace;
-            Debug.Log(maxHeight);
         }
 
         /* Create a ship for this player */
@@ -100,14 +99,13 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
 
         /* Initialize the camera to follow the player's ship */
         CameraFollow follower = cameraTransform.GetComponent<CameraFollow>();
-        ShipMotor motor = shipTransform.GetComponent<ShipMotor>();
-        follower.ship = motor;
+        Ship ship = shipTransform.GetComponent<Ship>();
+        follower.ship = ship;
         follower.lookAt = shipTransform;
         follower.followPoint = shipTransform.Find("CameraTarget");
 
         /* Add a HUD for this player */
         HUD hud = Instantiate(HUDPrefab, Vector3.zero, Quaternion.identity) as HUD;
-        Ship ship = shipTransform.GetComponent<Ship>();
         hud.ship = ship;
 
         /* Position the camera and canvas correctly on-screen */
