@@ -90,6 +90,10 @@ public class ShipMotor : MonoBehaviour {
         targetRotation = rotation;
 	}
 
+    void OnDisable() {
+        body.velocity = Vector3.zero;
+    }
+
     public void Reset() {
         if (IsBoosting() && OnStopBoost != null) {
             OnStopBoost();
@@ -102,6 +106,10 @@ public class ShipMotor : MonoBehaviour {
         boostCooldownTimer = boostCooldownTime;
         boostTimer = boostTime;
         isBoosting = false;
+
+        if (OnBoostChange != null) {
+            OnBoostChange(boostTimer);
+        }
 
         thrust = 0.0f;
         pitch = 0.0f;

@@ -6,10 +6,12 @@ public class ShipRespawnHandler : MonoBehaviour {
     public float respawnTime = 3.0f;
 
     private Ship ship;
+    private ShipMotor motor;
     private float respawnTimer = 3.0f;
     private bool respawning = false;
 
 	void Start () {
+        motor = GetComponent<ShipMotor>();
         ship = GetComponent<Ship>();
         ship.OnDead += OnDead;
 	}
@@ -53,5 +55,7 @@ public class ShipRespawnHandler : MonoBehaviour {
         for (int i = 0; i < colliders.Length; i++) {
             colliders[i].enabled = yes;
         }
+
+        motor.enabled = yes;
     }
 }
