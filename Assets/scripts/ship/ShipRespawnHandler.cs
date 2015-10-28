@@ -7,10 +7,12 @@ public class ShipRespawnHandler : MonoBehaviour {
 
     private Ship ship;
     private ShipMotor motor;
+    private CannonController cannon;
     private float respawnTimer = 3.0f;
     private bool respawning = false;
 
 	void Start () {
+        cannon = GetComponent<CannonController>();
         motor = GetComponent<ShipMotor>();
         ship = GetComponent<Ship>();
         ship.OnDead += OnDead;
@@ -57,5 +59,6 @@ public class ShipRespawnHandler : MonoBehaviour {
         }
 
         motor.enabled = yes;
+        cannon.enabled = yes;
     }
 }
