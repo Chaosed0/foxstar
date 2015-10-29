@@ -60,11 +60,12 @@ public class CameraFollow : MonoBehaviour {
     }
 
     Quaternion smoothDampQuat(Quaternion current, Quaternion target, float smoothTime) {
-        float angle = Quaternion.Angle(transform.rotation, target);
+        float angle = Quaternion.Angle(current, target);
         float newAngle = Mathf.SmoothDamp(angle, 0.0f, ref angVel, smoothTime);
         float lerp = 1.0f;
+        Debug.Log(angle + " " + newAngle + " " + smoothTime);
         if (angle != 0) {
-            lerp = newAngle / angle;
+            lerp = 1.0f - newAngle / angle;
         }
         return Quaternion.Slerp(current, target, lerp);
     }
@@ -77,10 +78,16 @@ public class CameraFollow : MonoBehaviour {
         transform.position = Vector3.SmoothDamp(transform.position, followPoint.position, ref velocity, thrustSmoothing);
 
         Vector3 shipRotation = motor.getCurrentRotation();
-        Vector3 targetUp = Quaternion.Euler(shipRotation.x, shipRotation.y, shipRotation.z * curRollDamping) * Vector3.up;
 
-        Vector3 up = Vector3.SmoothDamp(transform.up, targetUp, ref upVelocity, rotationalSmoothing);
-        Quaternion target = Quaternion.LookRotation(lookAt.position - transform.position, up);
+        Quaternion target;
+        if (motor.IsManeuvering()) {
+            Vector3 targetUp = Quaternion.Euler(shipRotation.x, shipRotation.y, shipRotation.z * curRollDamping) * Vector3.up;
+            Vector3 up = Vector3.SmoothDamp(transform.up, targetUp, ref upVelocity, 0.01f);
+            target = Quaternion.LookRotation(lookAt.position - transform.position, up);
+        } else {
+            target = Quaternion.Euler(shipRotation.x/3.0f, shipRotation.y, 0.0f);
+        }
+
         transform.rotation = smoothDampQuat(transform.rotation, target, rotationalSmoothing);
 
         if (Mathf.Abs(camera.fieldOfView - fovTarget) > Util.Epsilon) {
