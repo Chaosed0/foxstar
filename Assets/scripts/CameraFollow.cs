@@ -63,7 +63,6 @@ public class CameraFollow : MonoBehaviour {
         float angle = Quaternion.Angle(current, target);
         float newAngle = Mathf.SmoothDamp(angle, 0.0f, ref angVel, smoothTime);
         float lerp = 1.0f;
-        Debug.Log(angle + " " + newAngle + " " + smoothTime);
         if (angle != 0) {
             lerp = 1.0f - newAngle / angle;
         }

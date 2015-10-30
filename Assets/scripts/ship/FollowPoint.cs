@@ -13,6 +13,5 @@ public class FollowPoint : MonoBehaviour {
         Vector3 position = transform.localPosition;
         position.y = maxHeight * lerp;
         transform.localPosition = position;
-        //Debug.Log(lerp + " " + position);
     }
 }

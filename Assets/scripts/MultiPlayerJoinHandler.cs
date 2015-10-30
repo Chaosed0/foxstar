@@ -7,6 +7,7 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
     public Camera initialCamera;
     public TerrainGenerator terrain;
     public CanvasGroup hideOnReady;
+    public SoundSystem soundSystem;
 
     public Transform shipPrefab;
     public Transform cameraPrefab;
@@ -40,6 +41,7 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
         splitHelper = new SplitHelper();
 	}
 
+    /* Creates a ship, adding only components that an AI would have */
     Transform CreateShip() {
         if (maxHeight == Int32.MinValue) {
             maxHeight = terrain.GetMaxHeightIn(new Vector2(Constants.worldSize, Constants.worldSize)) +
@@ -120,7 +122,11 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
         inputs[playerNum] = input;
         input.enabled = false;
 
-        /* Add respawn handler */
+        /* Initialize the sound controller */
+        PlayerSoundController soundController = shipTransform.GetComponent<PlayerSoundController>();
+        soundController.soundSystem = soundSystem;
+
+        /* Initialize respawn handler */
         ShipRespawnHandler respawnHandler = shipTransform.GetComponent<ShipRespawnHandler>();
         respawnHandler.terrain = terrain;
 

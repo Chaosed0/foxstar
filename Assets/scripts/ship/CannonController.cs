@@ -13,6 +13,9 @@ public class CannonController : MonoBehaviour {
     private Collider[] colliders;
     private ShipMotor motor;
 
+    public delegate void Shoot();
+    public event Shoot OnShoot;
+
     void Start() {
         colliders = player.GetComponents<Collider>();
         motor = GetComponent<ShipMotor>();
@@ -38,6 +41,10 @@ public class CannonController : MonoBehaviour {
                 foreach (Collider collider in colliders) {
                     Physics.IgnoreCollision(laser.GetChild(0).GetComponent<Collider>(), collider);
                 }
+            }
+
+            if (OnShoot != null) {
+                OnShoot();
             }
         }
     }
