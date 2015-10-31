@@ -57,7 +57,7 @@ public class Ship : MonoBehaviour {
             OnHealthChange(health, healthChange);
         }
 
-        if (health < 0) {
+        if (IsDead()) {
             if (OnDead != null) {
                 OnDead();
             }
