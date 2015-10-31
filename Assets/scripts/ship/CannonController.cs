@@ -16,12 +16,23 @@ public class CannonController : MonoBehaviour {
     public delegate void Shoot();
     public event Shoot OnShoot;
 
+    public delegate void StartShooting();
+    public event StartShooting OnStartShooting;
+
+    public delegate void StopShooting();
+    public event StopShooting OnStopShooting;
+
     void Start() {
         colliders = player.GetComponents<Collider>();
         motor = GetComponent<ShipMotor>();
     }
 
     public void setFiring(bool firing) {
+        if (!this.firing && firing && OnStartShooting != null) {
+            OnStartShooting();
+        } else if (this.firing && !firing && OnStopShooting != null) {
+            OnStopShooting();
+        }
         this.firing = firing;
     }
 

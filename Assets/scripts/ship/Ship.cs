@@ -48,7 +48,7 @@ public class Ship : MonoBehaviour {
         } else {
             /* If we collided with something generic, figure out how fast we
              * hit it and do damage accordingly */
-            healthChange = -(int)(collision.relativeVelocity.magnitude / (motor.maxSpeed * 0.75f) * maxHealth);
+            healthChange = -(int)(collision.relativeVelocity.magnitude / (2*motor.maxSpeed) * maxHealth);
         }
 
         health += healthChange;

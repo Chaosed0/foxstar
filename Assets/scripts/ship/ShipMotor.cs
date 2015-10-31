@@ -25,11 +25,10 @@ public class ShipMotor : MonoBehaviour {
     public float smallRollAngle = 50.0f;
     public float tightRollAngle = 90.0f;
 
-    public float boostCooldownTime = 15.0f;
+    public float boostRefillCooldownTime = 1.0f;
     public float boostTime = 2.0f;
-    public float boostRefillFactor = 2.0f;
 
-    private float boostCooldownTimer = 15.0f;
+    private float boostRefillCooldownTimer = 1.0f;
     private float boostTimer = 2.0f;
     private bool isBoosting = false;
 
@@ -82,7 +81,7 @@ public class ShipMotor : MonoBehaviour {
 	void Start () {
         body = GetComponent<Rigidbody>();
 
-        boostCooldownTimer = boostCooldownTime;
+        boostRefillCooldownTimer = boostRefillCooldownTime;
         boostTimer = boostTime;
 
         dragCoefficient = acceleration/(maxSpeed*maxSpeed);
@@ -103,7 +102,7 @@ public class ShipMotor : MonoBehaviour {
             OnStopManeuver();
         }
 
-        boostCooldownTimer = boostCooldownTime;
+        boostRefillCooldownTimer = boostRefillCooldownTime;
         boostTimer = boostTime;
         isBoosting = false;
 
@@ -248,31 +247,37 @@ public class ShipMotor : MonoBehaviour {
             if (OnBoostChange != null) {
                 OnBoostChange(boostTimer);
             }
-        } else if (boostTimer < boostTime) {
-            boostTimer = Mathf.Min(boostTimer + Time.deltaTime / boostRefillFactor, boostTime);
+
+            if (boostTimer <= 0.0f) {
+                FinishBoost();
+            }
+
+        } else if (boostRefillCooldownTimer >= boostRefillCooldownTime && boostTimer < boostTime) {
+            boostTimer = Mathf.Min(boostTimer + Time.deltaTime, boostTime);
             if (OnBoostChange != null) {
                 OnBoostChange(boostTimer);
             }
         }
 
-        if (boostTimer <= 0.0f) {
-            isBoosting = false;
-            if (OnStopBoost != null) {
-                OnStopBoost();
-            }
-        }
-
-        if (boostCooldownTimer < boostCooldownTime) {
-            boostCooldownTimer += Time.deltaTime;
+        if (boostRefillCooldownTimer < boostRefillCooldownTime) {
+            boostRefillCooldownTimer += Time.deltaTime;
             if (OnBoostAvailable != null) {
                 OnBoostAvailable();
             }
         }
     }
 
+    private void FinishBoost() {
+        isBoosting = false;
+        if (OnStopBoost != null) {
+            OnStopBoost();
+        }
+        boostRefillCooldownTimer = 0.0f;
+    }
+
     public void Boost(bool doBoost) {
-        if (doBoost && !IsManeuvering() && !IsBoosting()) {
-            if (boostCooldownTimer >= boostCooldownTime) {
+        if (doBoost && !IsBoosting()) {
+            if (!IsManeuvering() && boostTimer > 0.0f) {
                 isBoosting = true;
                 if (OnStartBoost != null) {
                     OnStartBoost();
@@ -283,10 +288,7 @@ public class ShipMotor : MonoBehaviour {
                 }
             }
         } else if (!doBoost && IsBoosting()) {
-            isBoosting = false;
-            if (OnStopBoost != null) {
-                OnStopBoost();
-            }
+            FinishBoost();
         }
     }
 
