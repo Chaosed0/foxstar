@@ -3,8 +3,8 @@ using System.Collections;
 
 public class Ship : MonoBehaviour {
     public int maxHealth = 100;
-    public int score = 0;
 
+    private int score = 0;
     private ShipMotor motor;
     private int health = 100;
 
@@ -57,6 +57,10 @@ public class Ship : MonoBehaviour {
                 OnScoreChange(score, -1);
             }
         }
+    }
+
+    public int GetScore() {
+        return score;
     }
 
     void OnCollisionEnter(Collision collision) {

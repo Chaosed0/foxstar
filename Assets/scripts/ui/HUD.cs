@@ -7,9 +7,12 @@ public class HUD : MonoBehaviour {
     public Ship ship;
     public Slider healthSlider;
     public Slider boostSlider;
+    public CanvasGroup scorePanel;
     public Image[] scoreImages;
     public float margin = 10.0f;
-    public float boostMargin = 16.4f;
+
+    private float boostMargin = 16.4f;
+    private float scoreMargin = 42.35f;
 
     public float minIconDistance = 100.0f;
     public float maxIconDistance = 2400.0f;
@@ -31,7 +34,7 @@ public class HUD : MonoBehaviour {
         ship.OnScoreChange += OnScoreChange;
         motor.OnBoostChange += OnBoostChange;
 
-        SetScoreVisible(0);
+        SetScoreVisible(ship.GetScore());
 	}
 
     public void Finish() {
@@ -76,16 +79,14 @@ public class HUD : MonoBehaviour {
     }
 
     void SetScoreVisible(int score) {
-        if (score >= 0 && score < scoreImages.Length) {
-            for (int i = 0; i < scoreImages.Length; i++) {
-                Color color = scoreImages[i].color;
-                if (i < score) {
-                    color.a = 1.0f;
-                } else {
-                    color.a = 0.0f;
-                }
-                scoreImages[i].color = color;
+        for (int i = 0; i < scoreImages.Length; i++) {
+            Color color = scoreImages[i].color;
+            if (i < score) {
+                color.a = 1.0f;
+            } else {
+                color.a = 0.0f; 
             }
+            scoreImages[i].color = color;
         }
     }
 
@@ -100,6 +101,7 @@ public class HUD : MonoBehaviour {
     public void SetOrientation(SplitHelper.Orientation orientation) {
         RectTransform healthTransform = healthSlider.GetComponent<RectTransform>();
         RectTransform boostTransform = boostSlider.GetComponent<RectTransform>();
+        RectTransform scoreTransform = scorePanel.GetComponent<RectTransform>();
         Vector2 anchor = Vector2.zero;
         Vector2 position = Vector2.zero;
         switch (orientation) {
@@ -134,5 +136,10 @@ public class HUD : MonoBehaviour {
         boostTransform.anchorMax = anchor;
         boostTransform.pivot = anchor;
         boostTransform.anchoredPosition = position + new Vector2(0.0f, Mathf.Sign(position.y) * boostMargin);
+
+        scoreTransform.anchorMin = anchor;
+        scoreTransform.anchorMax = anchor;
+        scoreTransform.pivot = anchor;
+        scoreTransform.anchoredPosition = position + new Vector2(0.0f, Mathf.Sign(position.y) * scoreMargin);
     }
 }
