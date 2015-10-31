@@ -86,6 +86,11 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
     }
 
     void OnPlayerJoined(string playerPrefix) {
+        if (playerNum >= maxPlayers) {
+            /* Just ignore */
+            return;
+        }
+
         /* Regardless of who joined, do away with the initial camera */
         initialCamera.enabled = false;
 
