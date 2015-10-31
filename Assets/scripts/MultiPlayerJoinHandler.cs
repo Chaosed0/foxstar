@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 using System;
 
 public class MultiPlayerJoinHandler: MonoBehaviour {
@@ -14,16 +15,19 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
     public HUD HUDPrefab;
 
     public RectTransform minimap;
+    public WinHandler winHandler;
+
     public MinimapIcon[] minimapIcons;
     public Material[] shieldMats;
+    public string[] playerNames;
 
     public bool spawnAI = true;
 
     private int playerNum = 0;
     private int maxPlayers = 4;
     private float maxHeight = Int32.MinValue;
+    private List<PlayerInput> inputs = new List<PlayerInput>();
     private PlayerJoinEventer eventer;
-    private PlayerInput[] inputs;
     private SplitHelper splitHelper;
 
     private Vector3[] initialShipPositions = {
@@ -37,7 +41,6 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
         eventer = GetComponent<PlayerJoinEventer>();
         eventer.OnPlayerJoined += OnPlayerJoined;
         eventer.OnAllPlayersReady += OnAllPlayersReady;
-        inputs = new PlayerInput[maxPlayers];
         splitHelper = new SplitHelper();
 	}
 
@@ -124,8 +127,8 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
         /* Initialize the PlayerInput and disable it until everyone's ready */
         PlayerInput input = shipTransform.GetComponent<PlayerInput>();
         input.SetPlayerPrefix(playerPrefix);
-        inputs[playerNum] = input;
         input.enabled = false;
+        inputs.Add(input);
 
         /* Initialize the sound controller */
         PlayerSoundController soundController = shipTransform.GetComponent<PlayerSoundController>();
@@ -139,7 +142,7 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
     }
 
     void OnAllPlayersReady() {
-        for (int i = 0; i < playerNum; i++) {
+        for (int i = 0; i < inputs.Count; i++) {
             PlayerInput input = inputs[i];
             input.enabled = true;
         }
@@ -152,6 +155,8 @@ public class MultiPlayerJoinHandler: MonoBehaviour {
             Destroy(AIShipTransform.GetComponent<PlayerInput>());
             AIShipTransform.gameObject.AddComponent<AIFollowInput>();
         }
+
+        winHandler.Initialize(inputs, playerNames);
 
         splitHelper.Finish();
         hideOnReady.alpha = 0.0f;

@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class CannonController : MonoBehaviour {
-    public Transform laserPrefab;
+    public Laser laserPrefab;
     public float cooldown = 0.2f;
     public Transform[] locations;
     public Transform player;
@@ -12,6 +12,7 @@ public class CannonController : MonoBehaviour {
     private bool firing = false;
     private Collider[] colliders;
     private ShipMotor motor;
+    private Ship ship;
 
     public delegate void Shoot();
     public event Shoot OnShoot;
@@ -25,6 +26,7 @@ public class CannonController : MonoBehaviour {
     void Start() {
         colliders = player.GetComponents<Collider>();
         motor = GetComponent<ShipMotor>();
+        ship = GetComponent<Ship>();
     }
 
     public void setFiring(bool firing) {
@@ -46,11 +48,16 @@ public class CannonController : MonoBehaviour {
         } else if (firing) {
             cooldownTimer = 0.0f;
             for (int i = 0; i < locations.Length; i++) {
-                Transform laser = Instantiate(laserPrefab, locations[i].position, locations[i].rotation) as Transform;
+                Laser laser = Instantiate(laserPrefab, locations[i].position, locations[i].rotation) as Laser;
+                laser.owner = ship;
+
+                /* Initialize the laser's speed */
                 Rigidbody laserBody = laser.GetComponent<Rigidbody>();
                 laserBody.velocity = transform.forward * motor.getCurrentSpeed() + transform.forward.normalized * bulletSpeed;
+                
+                /* Ignore collisions with the firing ship */
                 foreach (Collider collider in colliders) {
-                    Physics.IgnoreCollision(laser.GetChild(0).GetComponent<Collider>(), collider);
+                    Physics.IgnoreCollision(laser.transform.GetChild(0).GetComponent<Collider>(), collider);
                 }
             }
 
