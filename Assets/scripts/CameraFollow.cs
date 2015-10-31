@@ -9,6 +9,8 @@ public class CameraFollow : MonoBehaviour {
     public float rotationalSmoothing = 0.05f;
     public float rollDamping = 0.1f;
     public float boostFovFactor = 0.8f;
+    public float shakeTime = 0.5f;
+    public float shakeMagnitude = 2.0f;
 
     private ShipMotor motor;
     private new Camera camera;
@@ -21,6 +23,8 @@ public class CameraFollow : MonoBehaviour {
     private float normalFov;
     private float fovTarget;
 
+    private float shakeTimer = 1.0f;
+
     void Start() {
         camera = GetComponent<Camera>();
         curRollDamping = rollDamping;
@@ -32,10 +36,13 @@ public class CameraFollow : MonoBehaviour {
         motor.OnStopBoost += OnStopBoost;
 
         ship.OnRespawn += OnRespawn;
+        ship.OnHealthChange += OnHealthChange;
 
         normalFov = camera.fieldOfView;
         boostFov = normalFov * boostFovFactor;
         fovTarget = normalFov;
+
+        shakeTimer = shakeTime;
     }
 
     void OnStartManeuver() {
@@ -59,6 +66,12 @@ public class CameraFollow : MonoBehaviour {
         transform.rotation = ship.transform.rotation;
     }
 
+    void OnHealthChange(int health, int change) {
+        if (change < 0) {
+            shakeTimer = 0.0f;
+        }
+    }
+
     Quaternion smoothDampQuat(Quaternion current, Quaternion target, float smoothTime) {
         float angle = Quaternion.Angle(current, target);
         float newAngle = Mathf.SmoothDamp(angle, 0.0f, ref angVel, smoothTime);
@@ -71,10 +84,21 @@ public class CameraFollow : MonoBehaviour {
 
     void FixedUpdate() {
         if (ship.IsDead()) {
+            shakeTimer = shakeTime;
             return;
         }
 
-        transform.position = Vector3.SmoothDamp(transform.position, followPoint.position, ref velocity, thrustSmoothing);
+        Vector3 shake = Vector3.zero;
+        if (shakeTimer <= shakeTime) {
+            float rad = Random.Range(0.0f, 360.0f);
+            float magnitude = (1.0f - shakeTimer / shakeTime) * shakeMagnitude;
+            shake.x = magnitude * Mathf.Cos(rad);
+            shake.y = magnitude * Mathf.Sin(rad);
+            shake = ship.transform.rotation * shake;
+            shakeTimer += Time.deltaTime;
+        }
+
+        transform.position = Vector3.SmoothDamp(transform.position, followPoint.position, ref velocity, thrustSmoothing) + shake;
 
         Vector3 shipRotation = motor.getCurrentRotation();
 
