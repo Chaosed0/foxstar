@@ -80,10 +80,10 @@ public class SplitHelper {
                 pair.camera.rect = new Rect(0.5f, 0.0f, 0.5f, 1.0f);
                 break;
             case Orientation.TOP:
-                pair.camera.rect = new Rect(0.0f, 0.0f, 1.0f, 0.5f);
+                pair.camera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
                 break;
             case Orientation.BOTTOM:
-                pair.camera.rect = new Rect(0.0f, 0.5f, 1.0f, 0.5f);
+                pair.camera.rect = new Rect(0.0f, 0.0f, 1.0f, 0.5f);
                 break;
             case Orientation.TOP_LEFT:
                 pair.camera.rect = new Rect(0.0f, 0.5f, 0.5f, 0.5f);
