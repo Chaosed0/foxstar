@@ -43,7 +43,7 @@ public class Ship : MonoBehaviour {
         Collider collider = collision.collider;
         int healthChange = 0;
         if (collider.gameObject.tag == "Laser") {
-            healthChange = -5;
+            healthChange = -10;
             /* The laser is destroyed in the Laser script */
         } else {
             /* If we collided with something generic, figure out how fast we

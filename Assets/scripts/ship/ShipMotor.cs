@@ -105,6 +105,7 @@ public class ShipMotor : MonoBehaviour {
         boostRefillCooldownTimer = boostRefillCooldownTime;
         boostTimer = boostTime;
         isBoosting = false;
+        body.Sleep();
 
         if (OnBoostChange != null) {
             OnBoostChange(boostTimer);
@@ -118,16 +119,21 @@ public class ShipMotor : MonoBehaviour {
         rotation = transform.rotation.eulerAngles;
         targetRotation = rotation;
 
+        speed = 0.0f;
+
         limitPitch = true;
         limitRoll = true;
         doYaw = true;
         wrapRotation = true;
-
         yawMultiplier = 1.0f;
-        speed = 0.0f;
 
         currentManeuver = Maneuvers.NONE;
         maneuverDirection = 0.0f;
+
+        oob = false;
+        apex = false;
+        righted = false;
+        finished = false;
     }
 
     public bool IsBoosting() {

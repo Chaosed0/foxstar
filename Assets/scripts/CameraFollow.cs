@@ -96,6 +96,7 @@ public class CameraFollow : MonoBehaviour {
             shake.y = magnitude * Mathf.Sin(rad);
             shake = ship.transform.rotation * shake;
             shakeTimer += Time.deltaTime;
+            Debug.Log(shake);
         }
 
         transform.position = Vector3.SmoothDamp(transform.position, followPoint.position, ref velocity, thrustSmoothing) + shake;
