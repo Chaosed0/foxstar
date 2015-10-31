@@ -7,6 +7,7 @@ public class HUD : MonoBehaviour {
     public Ship ship;
     public Slider healthSlider;
     public Slider boostSlider;
+    public Image[] scoreImages;
     public float margin = 10.0f;
     public float boostMargin = 16.4f;
 
@@ -27,7 +28,10 @@ public class HUD : MonoBehaviour {
         canvas = GetComponent<Canvas>();
         rectTransform = GetComponent<RectTransform>();
         ship.OnHealthChange += OnHealthChange;
+        ship.OnScoreChange += OnScoreChange;
         motor.OnBoostChange += OnBoostChange;
+
+        SetScoreVisible(0);
 	}
 
     public void Finish() {
@@ -63,6 +67,24 @@ public class HUD : MonoBehaviour {
             } else {
                 /* offscreen */
                 playerIcons[i].anchoredPosition = new Vector2(-100.0f, -100.0f);
+            }
+        }
+    }
+
+    void OnScoreChange(int score, int change) {
+        SetScoreVisible(score);
+    }
+
+    void SetScoreVisible(int score) {
+        if (score >= 0 && score < scoreImages.Length) {
+            for (int i = 0; i < scoreImages.Length; i++) {
+                Color color = scoreImages[i].color;
+                if (i < score) {
+                    color.a = 1.0f;
+                } else {
+                    color.a = 0.0f;
+                }
+                scoreImages[i].color = color;
             }
         }
     }

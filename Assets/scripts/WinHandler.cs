@@ -15,7 +15,7 @@ public class WinHandler : MonoBehaviour {
 
         for (int i = 0; i < inputs.Count; i++) {
             Ship ship = inputs[i].GetComponent<Ship>();
-            WinHandlerFunctor functor = new WinHandlerFunctor(names[i], motors, winPanel);
+            WinHandlerFunctor functor = new WinHandlerFunctor(names[i], motors, winPanel, pointsToWin);
             ship.OnScoreChange += functor.OnScoreChange;
         }
     }
@@ -25,17 +25,21 @@ public class WinHandlerFunctor {
     private List<ShipMotor> motors;
     private string name;
     private WinnerPanel winPanel;
+    private int pointsToWin;
 
-    public WinHandlerFunctor(string name, List<ShipMotor> motors, WinnerPanel winPanel) {
+    public WinHandlerFunctor(string name, List<ShipMotor> motors, WinnerPanel winPanel, int pointsToWin) {
         this.name = name;
         this.motors = motors;
         this.winPanel = winPanel;
+        this.pointsToWin = pointsToWin;
     }
 
     public void OnScoreChange(int score, int change) {
-        winPanel.SetWinner(name);
-        for (int i = 0; i < motors.Count; i++) {
-            motors[i].enabled = false;
+        if (score >= pointsToWin) {
+            winPanel.SetWinner(name);
+            for (int i = 0; i < motors.Count; i++) {
+                motors[i].enabled = false;
+            }
         }
     }
 }
